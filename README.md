@@ -26,7 +26,7 @@ To remove the dotfile configs, run the following commands. Be certain to double
 check the contents of the files before removing so you don't lose custom
 settings.
 
-```terminal
+~~~~~~~~~~{.terminal}
 rm ~/.zshenv
 rm ~/.zshprofile
 rm -rf ~/.zsh
@@ -34,6 +34,6 @@ rm -rf ~/.zsh
 rm ~/.tmux.conf
 rm ~/.gitignore
 rm ~/.gitconfig
-```
+~~~~~~~~~~
 
 Then open a new terminal window to see the effects.
