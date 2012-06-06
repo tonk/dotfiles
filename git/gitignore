@@ -1,0 +1,49 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+#                    V e r s i o n   i n f o r m a t i o n                     #
+#------------------------------------------------------------------------------#
+# $Id:: .gitignore 2 2010-02-16 19:43:12Z tonk                              $: #
+# $Revision:: 2                                                             $: #
+# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Date:: 2010-02-16 20:43:22 +0100 (Tue, 16 Feb 2010)                      $: #
+# $Hash:: 0becb3d6c1a5bf689d3e256c6950ce29681a6d75 (tonk)                   $: #
+#------------------------------------------------------------------------------#
+#             E n d   o f   v e r s i o n   i n f o r m a t i o n              #
+#------------------------------------------------------------------------------#
+*.aux
+*.aux.bak
+*.fdb_latexmk
+*.log
+*.mkeys
+*.mkeys.jnl
+*.org
+*.out
+*.signed
+*.swp
+*.tar.gz
+*.tgz
+*.toc
+*.vcf
+*/PDFS/*
+*/figures/*.pdf
+*/sheets/*.pdf
+.DS_Store
+PDFS
+TOPDIR
+aliases
+beamer
+beamer/*
+bind.stats
+cache
+cache/*
+currentip
+figures/*.pdf
+named_dump.db
+output
+output/*
+session.key
+zhistory
+zhistory_root

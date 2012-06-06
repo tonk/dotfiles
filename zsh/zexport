@@ -1,0 +1,77 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zexport 35 2011-05-27 10:24:51 tonk                                 $: #
+# $Revision:: 35                                                            $: #
+# $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
+# $Date:: 2011-05-27 10:25:02 +0200 (Fri, 27 May 2011)                      $: #
+# $Hash:: ff6e4fc72cbc25fca4a9a0fbe0aa2a3de7870fd9 (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+export LANG=${LANG:-C}
+export LC_ALL=${LC_ALL:-C}
+export LC_TIME=en_DK.utf8
+
+export EDITOR="vim"
+export VISUAL="${EDITOR}"
+export GIT_EDITOR="${EDITOR}"
+export GIT_PAGER="less"
+export TIMEFMT="%U user %S system %E elapsed %PCPU (%J)"
+
+PATH=/bin:/sbin
+pathmunge /usr/etc
+pathmunge ~/.mutt/bin
+pathmunge ~/bin/we-blog
+pathmunge /usr/local/texlive/2011/bin/x86_64-linux
+pathmunge /usr/local/texlive/2011/bin/i386-linux
+pathmunge /usr/local/texlive/2011/bin/universal-darwin
+pathmunge /usr/bin
+pathmunge /usr/sbin
+pathmunge /usr/local/bind/bin
+pathmunge /usr/local/bind/sbin
+pathmunge /usr/local/sbin
+pathmunge /usr/local/bin
+pathmunge /opt/local/sbin
+pathmunge /opt/local/bin
+pathmunge ~/bin
+pathmunge ~/bin/git
+
+export PATH		# Needed for ZSH on Mac OS X
+
+#-----------------------------------------------------------------------------#
+# Man settings                                                                #
+#-----------------------------------------------------------------------------#
+manpathmunge /usr/local/share/man
+
+#-----------------------------------------------------------------------------#
+# History settings                                                            #
+#-----------------------------------------------------------------------------#
+export REPORTTIME=30
+export SAVEHIST=100000
+export HISTSIZE=100000
+if [[ $(id -u) = 0 ]]
+then
+	export USER="root"
+	export HISTFILE=~/.zsh/zhistory_root
+else
+	export HISTFILE=~/.zsh/zhistory
+fi
+
+#-----------------------------------------------------------------------------#
+# Pagers (less is more ;-))                                                   #
+#-----------------------------------------------------------------------------#
+export PAGER=/usr/bin/less
+
+#-----------------------------------------------------------------------------#
+# switches for less                                                           #
+#-----------------------------------------------------------------------------#
+export LESS='-eMFgXmqeisz-2XR -x4 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+
+#------------------------------------------------------------------------------#
+# Watch settings                                                               #
+#------------------------------------------------------------------------------#
+export LOGCHECK=5
+export WATCHFMT="%(a:At %T %B%n%b has %a from %M.:At %T %B%n%b on %l has %a.)"
+watch=( notme )

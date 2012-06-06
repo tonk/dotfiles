@@ -1,0 +1,47 @@
+[core]
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	pager = less -FRSX
+
+[merge]
+	summary = true
+
+[color]
+	ui = true
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	whitespace = red reverse
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[giggle]
+	main-window-maximized = false
+	main-window-geometry = 1187x715+0+29
+	main-window-view = HistoryView
+	file-view-vpane-position = 226
+	history-view-vpane-position = 456
+	show-graph = true
+
+[alias]
+	ls = ls-files
+	st = status
+	ci = commit
+	br = branch
+	co = checkout
+	df = diff
+	mdiff = diff origin/master
+	mdf = diff origin/master
+	lg = log -p
+	last = log --name-status -1 HEAD
+	timeline = log --graph \"--pretty=format:%C(192)%h%Creset by %C(bold magenta)%an%Creset (%ar)%C(182)%d%Creset%n%s%n%b\" --all

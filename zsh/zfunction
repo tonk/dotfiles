@@ -1,0 +1,159 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zfunction 17 2011-05-26 11:00:26 tonk                               $: #
+# $Revision:: 17                                                            $: #
+# $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
+# $Date:: 2011-05-26 11:00:41 +0200 (Thu, 26 May 2011)                      $: #
+# $Hash:: 921853a2ccaea0a7987467db3c847a8cf718be4d (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+set -U path
+set -U manpath
+pathmunge()
+{
+	# If the path doesn't exist, return
+	[[ ! -d "${1}" ]] && return
+
+	# Add the path
+	if [[ "${2}" = "after" ]]
+	then
+		path=(${path} "${1}")
+	else
+		path=("${1}" ${path})
+	fi
+}
+
+
+manpathmunge()
+{
+	# If the path doesn't exist, return
+	[[ ! -d "${1}" ]] && return
+
+	# Add the manpath
+	if [[ "${2}" = "after" ]]
+	then
+		manpath=(${manpath} "${1}")
+	else
+		manpath=("${1}" ${manpath})
+	fi
+}
+
+
+zhist()
+{
+	zmodload -i zsh/datetime
+
+	typeset -R4 elaps
+	typeset -L19 datim
+	typeset -R4 -i tel=0
+
+	NUM=0
+	[[ x"${1:-}" = x"-n" ]] && NUM=1
+
+	cat ~/.zsh/zhistory | while read dummy rest
+	do
+		tel=$(( ${tel} + 1 ))
+		epoch=${rest%%:*}
+		comm=${rest##*;}
+		elaps=${rest%%;*}
+		elaps=${elaps##*:}
+		datim="$(strftime "%Y-%m-%d %T" ${epoch})"
+		if [[ ${NUM} = 1 ]]
+		then
+			echo "${tel}) ${elaps} ${datim} - ${comm}"
+		else
+			echo "${elaps} ${datim} - ${comm}"
+		fi
+	done
+}
+
+
+psa()
+{
+	if [ ${#} = 0 ]
+	then
+		ps -ef | less
+	else
+		ps -ef$ | head -1
+		ps -ef				| \
+			grep -i ${*}	| \
+			grep -v "grep "	| \
+			less
+	fi
+}
+
+
+l()
+{
+	ls -lFh "${@}" | less -E
+}
+
+
+precmd()
+{
+	# First rehash the commands
+	rehash
+
+	# Now check if there's new mail
+	if [[ -d ${HOME}/Maildir/new ]]
+	then
+		MSG=$(ls ${HOME}/Maildir/new | grep -vc "^total ")
+		MSG=${MSG// /}
+
+		if [[ ${MSG} != 0 ]]
+		then
+			tput bold
+			if [[ ${MSG} = 1 ]]
+			then
+				echo "You have got ${MSG} new mail message."
+			else
+				echo "You have got ${MSG} new mail messages."
+			fi
+			tput sgr0
+		fi
+	fi
+
+	if [[ ( ${-} = *i* ) && ( $TERM == screen* ) ]]
+	then
+		printf "\ek$(hostname -s)\e\\"
+	fi
+}
+
+
+chpwd()
+{
+	# Set the initial umask
+	case "${PWD}/"
+	in
+		/etc/puppet/*)
+			[[ ${UMSAVE} = 0 ]] &&
+			{	um=$(umask)
+				UMSAVE=1
+			}
+			umask 007
+			;;
+		*)
+			UMSAVE=0
+			[[ x"${um}" != x"" ]] && umask ${um}
+			;;
+	esac
+}
+
+
+fm()
+{
+	[[ -d ~/Maildir ]] &&
+	{	if [[ $(ls -l ~/Maildir/new | grep -vc '^total ') != 0 ]]
+		then
+			grep -m 1 -h '^Subject:' ~/Maildir/new/*	| \
+								sed 's/^Subject: //'	| \
+								tail -n10				| \
+								sed 's/  */ /g'
+		else
+			echo "No new mail"
+		fi
+	}
+}

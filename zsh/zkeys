@@ -1,0 +1,67 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zkeys 2 2011-02-06 13:07:16 tonk                                    $: #
+# $Revision:: 2                                                             $: #
+# $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
+# $Date:: 2011-05-26 11:01:40 +0200 (Thu, 26 May 2011)                      $: #
+# $Hash:: 1bbf04d0941b3443fda7ca561ab577b2cc9ac86d (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+# Needed modules
+autoload -U history-search-end
+autoload -U edit-command-line
+
+# General
+bindkey '\e[Z' undo										# shift-tab            #
+bindkey '^r' history-incremental-search-backward
+bindkey -M vicmd "^R" redo
+bindkey -M vicmd "u" undo
+bindkey -M viins "^U" backward-kill-line
+
+# ^E edits the current command line
+zle -N edit-command-line
+bindkey '^E' edit-command-line
+
+# Search history
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "\e[B"  history-beginning-search-forward-end
+bindkey '\e[6~' history-beginning-search-forward-end
+bindkey "\e[A"  history-beginning-search-backward-end
+bindkey '\e[5~' history-beginning-search-backward-end
+
+# The 'Delete key'
+bindkey '\e[3~' delete-char
+
+# Arrow up and down
+bindkey "\e[5~"	up-line-or-search
+bindkey "\e[A"	up-line-or-search
+bindkey "\e[6~" down-line-or-search
+bindkey "\e[B"	down-line-or-search
+
+# Home and End
+bindkey "\eOH"	beginning-of-line
+bindkey "\e[H"	beginning-of-line
+bindkey "\e[1~" beginning-of-line
+bindkey "\eOF"  end-of-line
+bindkey "\e[F"  end-of-line
+bindkey "\e[4~" end-of-line
+
+# Ctrl-Left and Ctrl-Right
+bindkey '\e[5D'		backward-word
+bindkey '\e[1;5D'	backward-word
+bindkey '\e[5C'		forward-word
+bindkey '\e[1;5C'	forward-word
+
+# Handy keys
+bindkey ' ' magic-space    # also do history expansion on space
+bindkey '^I' complete-word # complete on tab, leave expansion to _expand
+
+# menu selection
+zmodload -i zsh/complist
+bindkey '^I' menu-select
+bindkey -M menuselect '^O' vi-insert
+zstyle ':completion:*' menu select=0 on=long

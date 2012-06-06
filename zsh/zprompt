@@ -1,0 +1,35 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zprompt 12 2009-08-09 15:37:50Z tonk                                $: #
+# $Revision:: 12                                                            $: #
+# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Date:: 2009-08-09 17:37:50 +0200 (Sun, 09 Aug 2009)                      $: #
+# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+# load prompt functions
+setopt promptsubst
+setopt transient_rprompt
+
+# get the colors
+source ~/.zsh/zcolors
+
+# Remote?
+REM=""
+[[ x"${SSH_TTY:-}" != x"" ]] && REM="->"
+
+# reset the colors when printing the rside prompt always
+if [[ x"${TERM_PROFILE}" == x"cursus" ]]
+then
+	PS1=$'$C_BLUE%n@%m $C_RED%2~$ $C_OFF'
+else
+	PS1=$'$C_RED${ZSSH}$C_CYAN${REM}%n@%m $C_WHITE%2~$ $C_OFF'
+fi
+[[ $(id -u) = 0 ]] && PS1=$'$C_RED${ZSSH}$C_RED${REM}%n@%m $C_WHITE%2~# $C_OFF'
+
+RPSR=$' $C_OFF'
+RPSL=$'$C_OFF$C_L_RED%(0?.$C_L_GREEN.(%?%)) '
+RPS2='%^'

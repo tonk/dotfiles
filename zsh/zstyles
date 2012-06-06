@@ -1,0 +1,29 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zstyles 3 2009-08-09 15:21:21Z tonk                                 $: #
+# $Revision:: 3                                                             $: #
+# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Date:: 2009-08-09 17:23:13 +0200 (Sun, 09 Aug 2009)                      $: #
+# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+# ignore these after vim
+zstyle ':completion:*:*:vim:*' ignored-patterns '*.o'
+zstyle ':completion:*:evince:*' file-patterns '*?.(pdf|ps|eps)'
+zstyle ':completion:*:par2repair:*' file-patterns '*?.(par2|PAR2)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zcache
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' NONE
+
+# show dots when completing
+expand-or-complete-with-dots() {
+	echo -n "..."
+	zle expand-or-complete
+	zle redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey "^I" expand-or-complete-with-dots

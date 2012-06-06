@@ -1,0 +1,73 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zprofile 10 2009-08-09 15:20:46Z tonk                               $: #
+# $Revision:: 10                                                            $: #
+# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Date:: 2009-08-09 17:23:08 +0200 (Sun, 09 Aug 2009)                      $: #
+# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+[[ ${TERM} == screen* ]] && export TERM=screen
+
+# set my umask
+umask 022
+
+# on
+setopt sh_nullcmd
+setopt autocd
+setopt autopushd
+setopt pushdignoredups
+setopt promptsubst
+setopt correct
+setopt rm_starsilent
+setopt hist_ignore_dups
+setopt magicequalsubst
+setopt share_history
+setopt append_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_space
+setopt no_nomatch
+setopt extended_glob
+setopt braceccl
+setopt complete_in_word
+setopt hash_listall
+setopt nohup
+setopt notify
+
+# off
+unsetopt globalrcs
+unsetopt bgnice
+
+# completion
+autoload -Uz compinit
+compinit
+
+# multiple move
+autoload zmv
+
+# help subsystem (you gotta know this one)
+autoload run-help
+
+# source helper files
+source ~/.zsh/zexit
+source ~/.zsh/zsshmaster
+source ~/.zsh/zalias
+source ~/.zsh/zfunction
+source ~/.zsh/zprompt
+source ~/.zsh/zkeys
+source ~/.zsh/zstyles
+source ~/.zsh/zexport
+
+# Emacs commandline editing
+# I hate the editor, but I love the commandline
+bindkey -e
+
+if [[ ${TERM:-} = "linux" ]]
+then
+	# turn annoying beep off
+	setterm -blength 0
+fi

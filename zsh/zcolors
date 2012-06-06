@@ -1,0 +1,22 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zcolors 10 2009-08-09 15:19:35Z tonk                                $: #
+# $Revision:: 10                                                            $: #
+# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Date:: 2009-08-09 17:23:00 +0200 (Sun, 09 Aug 2009)                      $: #
+# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+# export TERM=xterm-color
+autoload colors zsh/terminfo
+colors
+
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE GREY
+do
+    eval C_L_$color='%{$fg[${(L)color}]%}'
+    eval C_$color='%{$fg_bold[${(L)color}]%}'
+done
+C_OFF="%{$reset_color%}"

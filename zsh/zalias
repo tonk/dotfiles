@@ -1,0 +1,46 @@
+#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
+# $Id:: zalias 15 2009-09-18 14:04:12Z tonk                                 $: #
+# $Revision:: 15                                                            $: #
+# $Date:: 2009-09-30 16:19:44 +0200 (Wed, 30 Sep 2009)                      $: #
+# $Author:: Ton Kersten <Ton.Kersten@ATComputing.nl>                        $: #
+# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
+#------------------------------------------------------------------------------#
+
+# Get rid of the 'RedHat' aliases. They annoy me
+unalias ls > /dev/null 2>&1
+unalias cp > /dev/null 2>&1
+unalias rm > /dev/null 2>&1
+unalias ln > /dev/null 2>&1
+
+# life savers (for me)
+alias less='less -r'
+alias j=jobs
+alias tag="LANG=C vim -t"
+alias s='sudo /bin/zsh --login'
+alias more='/usr/bin/less'
+alias man='LC_ALL=C LANG=C /usr/bin/man'
+alias ls='LC_ALL=C LANG=C /bin/ls -lF'
+alias vi="vim"
+alias v="LANG=C vim"
+
+# nocorrect's
+alias mkdir='nocorrect mkdir'
+alias cp='nocorrect cp'
+alias mmv='nocorrect mmv'
+alias mv='nocorrect mv'
+alias ln='nocorrect ln'
+
+if [[ "$(uname)" != "SunOS" ]]
+then
+
+	alias egrep='nocorrect egrep --color=tty -d skip'
+	alias egrpe='nocorrect egrep --color=tty -d skip'
+	alias fgrep='nocorrect fgrep --color=tty -d skip'
+	alias fgrpe='nocorrect fgrep --color=tty -d skip'
+	alias grep='nocorrect grep --color=tty -d skip'
+	alias grpe='nocorrect grep --color=tty -d skip'
+fi
