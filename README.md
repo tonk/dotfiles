@@ -8,11 +8,11 @@ I am running this on Linux and Mac OS X
 
 ## Installation
 
-```terminal
+~~~~~~~~~~{.terminal}
 git clone git://github.com/tonk/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 make install
-```
+~~~~~~~~~~
 
 But be **very** carefull. This **will** overwrite what you have got now!!
 
