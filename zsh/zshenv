@@ -10,13 +10,16 @@
 # $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
 #------------------------------------------------------------------------------#
 
-[[ ${TERM} == screen* ]] && export TERM=screen
-
 # No files from the system
 unsetopt globalrcs
 
+source ~/.zsh/z_host_specific
 source ~/.zsh/zprompt
 source ~/.zsh/zalias
 source ~/.zsh/zfunction
 source ~/.zsh/zexport
 source ~/.zsh/zprofile
+
+[[	(${TERM_PROFILE} != "cursus" )	&&	\
+	( ${-} = *i*                 )	&&	\
+	( -x ~/roken                 ) ]] && ~/roken

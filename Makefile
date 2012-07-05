@@ -16,8 +16,8 @@
 
 install:
 	install -p -d -m 755 zsh			$(HOME)/.zsh
-	ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
-	ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
+	-ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
+	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
 	install -p -m 644 tmux/tmux.conf	$(HOME)/.tmux.conf
 	#

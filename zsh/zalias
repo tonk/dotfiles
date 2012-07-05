@@ -19,13 +19,13 @@ unalias ln > /dev/null 2>&1
 # life savers (for me)
 alias less='less -r'
 alias j=jobs
-alias tag="LANG=C vim -t"
+alias tag="LANG=C ${VI} -t"
 alias s='sudo /bin/zsh --login'
 alias more='/usr/bin/less'
 alias man='LC_ALL=C LANG=C /usr/bin/man'
 alias ls='LC_ALL=C LANG=C /bin/ls -lF'
-alias vi="vim"
-alias v="LANG=C vim"
+alias vi="${VI}"
+alias v="LANG=C ${VI}"
 
 # nocorrect's
 alias mkdir='nocorrect mkdir'
@@ -44,3 +44,10 @@ then
 	alias grep='nocorrect grep --color=tty -d skip'
 	alias grpe='nocorrect grep --color=tty -d skip'
 fi
+
+# mutt
+alias amutt="mutt_term atcmpg  AT_Computing"
+alias vmutt="mutt_term vtun    Prive"
+
+# Aliases for the ticket system
+alias tick="/home/tonk/bin/xfterm atsurance ticketsysteem"

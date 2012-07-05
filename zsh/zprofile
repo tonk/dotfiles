@@ -10,7 +10,7 @@
 # $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
 #------------------------------------------------------------------------------#
 
-[[ ${TERM} == screen* ]] && export TERM=screen
+source ~/.zsh/z_host_specific
 
 # set my umask
 umask 022
@@ -71,3 +71,5 @@ then
 	# turn annoying beep off
 	setterm -blength 0
 fi
+
+#cd
