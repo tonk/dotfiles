@@ -14,11 +14,11 @@
 unsetopt globalrcs
 
 source ~/.zsh/z_host_specific
-source ~/.zsh/zprompt
 source ~/.zsh/zalias
 source ~/.zsh/zfunction
 source ~/.zsh/zexport
 source ~/.zsh/zprofile
+source ~/.zsh/zprompt
 
 [[	(${TERM_PROFILE} != "cursus" )	&&	\
 	( ${-} = *i*                 )	&&	\

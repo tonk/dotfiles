@@ -21,17 +21,19 @@ source ~/.zsh/zcolors
 REM=""
 [[ x"${SSH_TTY:-}" != x"" ]] && REM="->"
 
-#TERM_PROFILE=cursus
+# PROMPT=$'%{${fg[cyan]}%}%B%~%b$(prompt_git_info)%{${fg[default]}%} '
 # reset the colors when printing the rside prompt always
 if [[ x"${TERM_PROFILE}" == x"cursus" ]]
 then
 	PS1=$'$C_BLUE%n@%m $C_RED%2~$ $C_OFF'
 else
-	PS1=$'$C_RED${ZSSH}$C_CYAN${REM}%n@%m $C_WHITE%2~$ $C_OFF'
+	# PS1=$'$C_RED${ZSSH}$C_CYAN${REM}%n@%m $C_WHITE%2~$ $C_OFF'
+	# PS1=$'%{${fg[cyan]}%}%B%~%b$(prompt_git_info)%{${fg[default]}%} '
+	PS1=$'$C_RED${ZSSH}$C_CYAN${REM}%n@%m$(prompt_git_info) $C_WHITE%2~$ $C_OFF'
 fi
 [[ $(${ID} -u) = 0 ]] && PS1=$'$C_RED${ZSSH}$C_RED${REM}%n@%m $C_WHITE%2~# $C_OFF'
 
 RPSR=$' $C_OFF'
 RPSL=$'$C_OFF$C_L_RED%(0?.$C_L_GREEN.(%?%)) '
 RPS2='%^'
-#RPROMPT='$C_GREEN(%*)$C_OFF'
+

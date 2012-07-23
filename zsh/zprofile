@@ -57,10 +57,10 @@ source ~/.zsh/zexit
 source ~/.zsh/zsshmaster
 source ~/.zsh/zalias
 source ~/.zsh/zfunction
-source ~/.zsh/zprompt
 source ~/.zsh/zkeys
 source ~/.zsh/zstyles
 source ~/.zsh/zexport
+source ~/.zsh/zprompt
 
 # Emacs commandline editing
 # I hate the editor, but I love the commandline
