@@ -3,10 +3,10 @@
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
-# $Id:: zfunction 17 2011-05-26 11:00:26 tonk                               $: #
-# $Revision:: 17                                                            $: #
+# $Id:: zfunction 18 2012-07-24 08:32:17 tonk                               $: #
+# $Revision:: 18                                                            $: #
 # $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
-# $Date:: 2011-05-26 11:00:41 +0200 (Thu, 26 May 2011)                      $: #
+# $Date:: 2012-07-24 08:32:58 +0200 (Tue, 24 Jul 2012)                      $: #
 # $Hash::                                                                   $: #
 #------------------------------------------------------------------------------#
 
@@ -188,23 +188,23 @@ update_git_vars()
 		local -a arr
 		arr=(${(f)st})
 
-		if [[ $arr[1] = 'Not currently on any branch.' ]]
+		if [[ $arr[1] = *Not\ currently\ on\ any\ branch.* ]]
 		then
 			__CURRENT_GIT_BRANCH='no-branch'
 		else
 			__CURRENT_GIT_BRANCH="${arr[1][(w)4]}"
 		fi
 
-		if [[ $arr[2] = 'Your branch is' ]]
+		if [[ $arr[2] = *Your\ branch\ is* ]]
 		then
-			if [[ $arr[2] = 'ahead' ]]
+			if [[ $arr[2] = *ahead* ]]
 			then
 				__CURRENT_GIT_BRANCH_STATUS='ahead'
-			elif [[ $arr[2] = 'diverged' ]]
+			elif [[ $arr[2] = *diverged* ]]
 			then
-				__CURRENT_GIT_BRANCH_STATUS='diverged'
+				__CURRENT_GIT_BRANCH_STATUS=*diverged*
 			else
-				__CURRENT_GIT_BRANCH_STATUS='behind'
+				__CURRENT_GIT_BRANCH_STATUS=*behind*
 			fi
 		fi
 
