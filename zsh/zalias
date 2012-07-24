@@ -49,5 +49,15 @@ fi
 alias amutt="mutt_term atcmpg  AT_Computing"
 alias vmutt="mutt_term vtun    Prive"
 
+# we-blog
+alias wba='we-blog-add'
+alias wbc='we-blog-config'
+alias wbe='we-blog-edit'
+alias wbi='we-blog-init'
+alias wbl='we-blog-list'
+alias wblo='we-blog-log'
+alias wbm='we-blog-make'
+alias wbr='we-blog-remove'
+
 # Aliases for the ticket system
 alias tick="/home/tonk/bin/xfterm atsurance ticketsysteem"
