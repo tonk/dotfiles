@@ -15,6 +15,8 @@
 #------------------------------------------------------------------------------#
 
 install:
+	mkdir -p $(HOME)/bin
+	#
 	install -p -d -m 755 zsh			$(HOME)/.zsh
 	-ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
@@ -23,6 +25,7 @@ install:
 	install -p -m 644 vim/vimrc			$(HOME)/.vimrc
 	#
 	install -p -m 644 tmux/tmux.conf	$(HOME)/.tmux.conf
+	install -p -m 755 tmux/tm			$(HOME)/bin/tm
 	#
 	install -p -m 644 git/gitignore		$(HOME)/.gitignore
 	install -p -m 644 git/gitattributes	$(HOME)/.gitattributes
