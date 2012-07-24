@@ -19,6 +19,9 @@ install:
 	-ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
+	install -p -d -m 755 vim/vim		$(HOME)/.vim
+	install -p -d -m 644 vim/vimrc		$(HOME)/.vimrc
+	#
 	install -p -m 644 tmux/tmux.conf	$(HOME)/.tmux.conf
 	#
 	install -p -m 644 git/gitignore		$(HOME)/.gitignore
