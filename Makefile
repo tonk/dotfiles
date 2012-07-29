@@ -18,10 +18,12 @@ install:
 	mkdir -p $(HOME)/bin
 	#
 	install -p -d -m 755 zsh			$(HOME)/.zsh
+	cp -rp zsh/*						$(HOME)/.zsh
 	-ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
 	install -p -d -m 755 vim/vim		$(HOME)/.vim
+	cp -rp vim/vim/*					$(HOME)/.zsh
 	install -p -m 644 vim/vimrc			$(HOME)/.vimrc
 	#
 	install -p -m 644 tmux/tmux.conf	$(HOME)/.tmux.conf
