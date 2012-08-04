@@ -5,10 +5,10 @@
 "------------------------------------------------------------------------------"
 "                    V e r s i o n   i n f o r m a t i o n                     "
 "------------------------------------------------------------------------------"
-" $Id:: Makefile 4 2011-07-08 12:59:30 tonk                                 $: "
-" $Revision:: 4                                                             $: "
+" $Id:: vimrc 5 2012-08-04 20:14:17 tonk                                    $: "
+" $Revision:: 5                                                             $: "
 " $Author:: Ton Kersten <tonk@tonkersten.com>                               $: "
-" $Date:: 2011-07-08 13:01:55 +0200 (Fri, 08 Jul 2011)                      $: "
+" $Date:: 2012-08-04 20:15:55 +0200 (Sat, 04 Aug 2012)                      $: "
 " $Hash:: 8929dba52be50420ddee975d3a433657ba45bb2d (tonk)                   $: "
 "------------------------------------------------------------------------------"
 "             E n d   o f   v e r s i o n   i n f o r m a t i o n              "
@@ -189,6 +189,24 @@ augroup mutt
 	autocmd BufEnter mutt-* set sr
 	autocmd BufEnter mutt-* set textwidth=68
 	autocmd BufEnter mutt-* set wrapmargin=0
+	autocmd BufEnter mutt-* set list
+augroup END
+
+"------------------------------------------------------------------------------"
+" Special settings for Markdown                                                "
+"------------------------------------------------------------------------------"
+augroup md
+	autocmd!
+
+	autocmd BufEnter *.md match ErrorMsg /\%>72v.\+/
+	autocmd BufEnter *.md set nopaste
+	autocmd BufEnter *.md set digraph
+	autocmd BufEnter *.md set nohlsearch
+	autocmd BufEnter *.md set textwidth=72
+	autocmd BufEnter *.md set wrap
+	autocmd BufEnter *.md set list
+	autocmd BufEnter *.md set spell
+	autocmd BufEnter *.md map q gq}
 	autocmd BufEnter mutt-* set list
 augroup END
 
