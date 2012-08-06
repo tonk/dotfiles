@@ -19,48 +19,21 @@ export VISUAL="${EDITOR}"
 export GIT_EDITOR="${EDITOR}"
 export GIT_PAGER="/usr/bin/less"
 export TIMEFMT="%U user %S system %E elapsed %PCPU (%J)"
-export SOFFICE=/usr/local/openoffice.org3/program/soffice
-#export TMPDIR=${TMPDIR:=/tmp/tonk}
-#[[ ! -d ${TMPDIR} ]] && { mkdir -p ${TMPDIR}; chmod 700 ${TMPDIR}; }
 
-PATH=/bin:/sbin
-pathmunge /usr/etc
-pathmunge /usr/openwin/bin
-pathmunge /home/consult/bin
-pathmunge /home/rooster/bin
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 pathmunge ~/.mutt/bin
-pathmunge /usr/atcomp/bin
-pathmunge /home/atbeheer/bin
-pathmunge /home/consult/bin
-pathmunge /usr/atcomp/atroff/bin
-pathmunge /usr/atcomp/cursus/bin
-pathmunge /usr/local/atroff/bin
 pathmunge ~/bin/we-blog
 pathmunge ~/bin/fpc/bin
-pathmunge /usr/local/texlive/2010/bin/x86_64-linux
-pathmunge /usr/local/texlive/2010/bin/i386-linux
-pathmunge /usr/local/texlive/2010/bin/universal-darwin
-pathmunge /usr/local/texlive/2011/bin/x86_64-linux
-pathmunge /usr/local/texlive/2011/bin/i386-linux
-pathmunge /usr/local/texlive/2011/bin/universal-darwin
-pathmunge /usr/bin
-pathmunge /usr/sbin
-pathmunge /usr/local/git/bin
-pathmunge /usr/local/atcons/bin
+pathmunge /usr/local/texlive/2012/bin/x86_64-linux
+pathmunge /usr/local/texlive/2012/bin/i386-linux
+pathmunge /usr/local/texlive/2012/bin/universal-darwin
 pathmunge /usr/local/bind/bin
 pathmunge /usr/local/bind/sbin
-pathmunge /usr/local/libexec/git-core
-pathmunge /usr/local/sbin
-pathmunge /usr/local/bin
-pathmunge /usr/local/bind/sbin
-pathmunge /usr/local/bind/bin
-pathmunge /usr/local/openssl/bin
 pathmunge /opt/local/sbin
 pathmunge /opt/local/bin
 pathmunge ~/bin
 pathmunge ~/bin/git
 pathmunge ~/go/bin
-pathmunge /opt/openoffice.org3/program
 
 export PATH		# Needed for ZSH on Mac OS X
 
