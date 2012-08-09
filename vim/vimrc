@@ -206,8 +206,8 @@ augroup md
 	autocmd BufEnter *.md set wrap
 	autocmd BufEnter *.md set list
 	autocmd BufEnter *.md set spell
+	autocmd BufEnter *.md set set spelllang=en
 	autocmd BufEnter *.md map q gq}
-	autocmd BufEnter mutt-* set list
 augroup END
 
 "------------------------------------------------------------------------------"
