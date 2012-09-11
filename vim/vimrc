@@ -5,10 +5,10 @@
 "------------------------------------------------------------------------------"
 "                    V e r s i o n   i n f o r m a t i o n                     "
 "------------------------------------------------------------------------------"
-" $Id:: vimrc 5 2012-08-04 20:14:17 tonk                                    $: "
+" $Id:: vimrc 5 2012-09-11 11:11:34 tonk                                    $: "
 " $Revision:: 5                                                             $: "
 " $Author:: Ton Kersten <tonk@tonkersten.com>                               $: "
-" $Date:: 2012-08-04 20:15:55 +0200 (Sat, 04 Aug 2012)                      $: "
+" $Date:: 2012-09-11 11:12:27 +0200 (Tue, 11 Sep 2012)                      $: "
 " $Hash:: 8929dba52be50420ddee975d3a433657ba45bb2d (tonk)                   $: "
 "------------------------------------------------------------------------------"
 "             E n d   o f   v e r s i o n   i n f o r m a t i o n              "
@@ -33,11 +33,13 @@ set modelines=10				" number of mode lines
 set showmode					" show the current mode !!YES!!
 set autoindent					" always set autoindenting on
 set showcmd						" display incomplete commands
-set backspace=indent,eol,start
-set nolist
-set listchars=tab:»·,trail:·
-set paste
-set noexpandtab
+set backspace=indent,eol,start	" define how the backspace reacts
+set nolist						" do not show the list chars
+set listchars=tab:»·,trail:·	" but define how they should appear
+set paste						" start in 'paste' mode
+set noexpandtab					" keep tabs as they are
+set encoding=utf-8				" use utf-8 as default encoding
+
 if v:version >= 700
 	set numberwidth=4
 endif
@@ -185,11 +187,18 @@ augroup END
 augroup mutt
 	autocmd!
 
+	autocmd BufEnter mutt-* match ErrorMsg /\%>68v.\+/
 	autocmd BufEnter mutt-* set nopaste
 	autocmd BufEnter mutt-* set sr
+	autocmd BufEnter mutt-* set digraph
+	autocmd BufEnter mutt-* set nohlsearch
 	autocmd BufEnter mutt-* set textwidth=68
 	autocmd BufEnter mutt-* set wrapmargin=0
+	autocmd BufEnter mutt-* set wrap
 	autocmd BufEnter mutt-* set list
+	autocmd BufEnter mutt-* set spell
+	autocmd BufEnter mutt-* set spelllang=nl
+	autocmd BufEnter mutt-* map q gq}
 augroup END
 
 "------------------------------------------------------------------------------"
@@ -206,7 +215,7 @@ augroup md
 	autocmd BufEnter *.md set wrap
 	autocmd BufEnter *.md set list
 	autocmd BufEnter *.md set spell
-	autocmd BufEnter *.md set set spelllang=en
+	autocmd BufEnter *.md set spelllang=en
 	autocmd BufEnter *.md map q gq}
 augroup END
 
