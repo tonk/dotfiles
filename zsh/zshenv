@@ -14,6 +14,7 @@
 unsetopt globalrcs
 
 source ~/.zsh/z_host_specific
+source ~/.zsh/zkeys
 source ~/.zsh/zalias
 source ~/.zsh/zfunction
 source ~/.zsh/zexport
