@@ -39,6 +39,7 @@ set listchars=tab:»·,trail:·	" but define how they should appear
 set paste						" start in 'paste' mode
 set noexpandtab					" keep tabs as they are
 set encoding=utf-8				" use utf-8 as default encoding
+set cursorcolumn				" Show where the cursor is
 
 if v:version >= 700
 	set numberwidth=4
