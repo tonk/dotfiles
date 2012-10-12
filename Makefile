@@ -19,7 +19,7 @@ install:
 	#
 	install -p -d -m 755 zsh			$(HOME)/.zsh
 	cp -rp zsh/*						$(HOME)/.zsh
-	-ln -s $(HOME)/.zsh/zshprofile		$(HOME)/.zshprofile
+	-ln -s $(HOME)/.zsh/zprofile		$(HOME)/.zprofile
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
 	install -p -d -m 755 vim/vim		$(HOME)/.vim
