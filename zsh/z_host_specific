@@ -3,19 +3,24 @@
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
-# $Id:: z_host_specific 16 2009-10-19 12:27:44Z tonk                        $: #
-# $Revision:: 16                                                            $: #
-# $Author:: Ton Kersten <Ton.Kersten@ATComputing.nl>                        $: #
-# $Date:: 2009-10-19 14:27:44 +0200 (Mon, 19 Oct 2009)                      $: #
+# $Id:: z_host_specific 17 2012-12-14 08:59:18 tonk                         $: #
+# $Revision:: 17                                                            $: #
+# $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
+# $Date:: 2012-12-14 08:59:33 +0100 (Fri, 14 Dec 2012)                      $: #
 # $Hash:: 2ed18be2000c8d318258873ae3d9da251fd7361f (tonk)                   $: #
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
 # The terminfo directory and the terminal                                      #
 #------------------------------------------------------------------------------#
-#export TERMINFO=${HOME}/.terminfo
-#export TERM=xterm
-[[ ${TERM} == screen* ]] && export TERM=screen
+if [[ ${TERM} == screen* ]]
+then
+	T="s/${TERM}"
+	if [[ ( ! -e "/lib/terminfo/${T}" ) && ( ! -e "/usr/share/terminfo/${T}" ) ]]
+	then
+		export TERM=screen
+	fi
+fi
 
 export VI="/usr/bin/vim"
 export ID="/usr/bin/id"
