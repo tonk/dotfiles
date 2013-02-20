@@ -5,10 +5,10 @@
 "------------------------------------------------------------------------------"
 "                    V e r s i o n   i n f o r m a t i o n                     "
 "------------------------------------------------------------------------------"
-" $Id:: vimrc 5 2012-09-11 11:11:34 tonk                                    $: "
-" $Revision:: 5                                                             $: "
+" $Id:: Makefile 4 2011-07-08 12:59:30 tonk                                 $: "
+" $Revision:: 4                                                             $: "
 " $Author:: Ton Kersten <tonk@tonkersten.com>                               $: "
-" $Date:: 2012-09-11 11:12:27 +0200 (Tue, 11 Sep 2012)                      $: "
+" $Date:: 2011-07-08 13:01:55 +0200 (Fri, 08 Jul 2011)                      $: "
 " $Hash:: 8929dba52be50420ddee975d3a433657ba45bb2d (tonk)                   $: "
 "------------------------------------------------------------------------------"
 "             E n d   o f   v e r s i o n   i n f o r m a t i o n              "
@@ -213,6 +213,8 @@ augroup md
 	autocmd BufEnter *.md set digraph
 	autocmd BufEnter *.md set nohlsearch
 	autocmd BufEnter *.md set textwidth=72
+	autocmd BufEnter *.md set ts=4
+	autocmd BufEnter *.md set sw=4
 	autocmd BufEnter *.md set wrap
 	autocmd BufEnter *.md set list
 	autocmd BufEnter *.md set spell
