@@ -208,18 +208,18 @@ augroup END
 augroup md
 	autocmd!
 
-	autocmd BufEnter *.md match ErrorMsg /\%>72v.\+/
-	autocmd BufEnter *.md set nopaste
-	autocmd BufEnter *.md set digraph
-	autocmd BufEnter *.md set nohlsearch
-	autocmd BufEnter *.md set textwidth=72
-	autocmd BufEnter *.md set ts=4
-	autocmd BufEnter *.md set sw=4
-	autocmd BufEnter *.md set wrap
-	autocmd BufEnter *.md set list
-	autocmd BufEnter *.md set spell
-	autocmd BufEnter *.md set spelllang=en
-	autocmd BufEnter *.md map q gq}
+	autocmd BufEnter *.md,*.mkd,*.pdc match ErrorMsg /\%>72v.\+/
+	autocmd BufEnter *.md,*.mkd,*.pdc set nopaste
+	autocmd BufEnter *.md,*.mkd,*.pdc set digraph
+	autocmd BufEnter *.md,*.mkd,*.pdc set nohlsearch
+	autocmd BufEnter *.md,*.mkd,*.pdc set textwidth=72
+	autocmd BufEnter *.md,*.mkd,*.pdc set ts=4
+	autocmd BufEnter *.md,*.mkd,*.pdc set sw=4
+	autocmd BufEnter *.md,*.mkd,*.pdc set wrap
+	autocmd BufEnter *.md,*.mkd,*.pdc set list
+	autocmd BufEnter *.md,*.mkd,*.pdc set spell
+	autocmd BufEnter *.md,*.mkd,*.pdc set spelllang=en
+	autocmd BufEnter *.md,*.mkd,*.pdc map q gq}
 augroup END
 
 "------------------------------------------------------------------------------"
