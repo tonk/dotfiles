@@ -5,10 +5,10 @@
 #------------------------------------------------------------------------------#
 #                    V e r s i o n   i n f o r m a t i o n                     #
 #------------------------------------------------------------------------------#
-# $Id:: Makefile 4 2011-07-08 12:59:30 tonk                                 $: #
-# $Revision:: 4                                                             $: #
-# $Author:: Ton Kersten <tonk@tonkersten.com>                               $: #
-# $Date:: 2011-07-08 13:01:55 +0200 (Fri, 08 Jul 2011)                      $: #
+# $Id:: Makefile 5 2013-05-14 11:47:01 tonk                                 $: #
+# $Revision:: 5                                                             $: #
+# $Author:: Ton Kersten <github@tonkersten.com>                             $: #
+# $Date:: 2013-05-14 11:47:09 +0200 (Tue, 14 May 2013)                      $: #
 # $Hash:: 8929dba52be50420ddee975d3a433657ba45bb2d (tonk)                   $: #
 #------------------------------------------------------------------------------#
 #             E n d   o f   v e r s i o n   i n f o r m a t i o n              #
@@ -23,7 +23,7 @@ install:
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
 	install -p -d -m 755 vim/vim		$(HOME)/.vim
-	cp -rp vim/vim/*					$(HOME)/.zsh
+	cp -rp vim/vim/*					$(HOME)/.vim
 	install -p -m 644 vim/vimrc			$(HOME)/.vimrc
 	#
 	install -p -m 644 tmux/tmux.conf	$(HOME)/.tmux.conf
