@@ -22,6 +22,7 @@ install:
 	-ln -s $(HOME)/.zsh/zprofile		$(HOME)/.zprofile
 	-ln -s $(HOME)/.zsh/zshenv			$(HOME)/.zshenv
 	#
+	mkdir -p $(HOME)/.vim
 	install -p -d -m 755 vim/vim		$(HOME)/.vim
 	cp -rp vim/vim/*					$(HOME)/.vim
 	install -p -m 644 vim/vimrc			$(HOME)/.vimrc

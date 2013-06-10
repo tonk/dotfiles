@@ -1,45 +1,46 @@
-"------------------------------------------------------------------------------"
-" vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) "
-"------------------------------------------------------------------------------"
+" vi: set sw=4 ts=4 ai:
+"
+" Personal preference .vimrc file
+" Maintained by Ton Kersten <github@tonkersten.com>
+"
+" To start vim without loading any .vimrc or plugins, use:
+"     vim -u NONE
+"
 
-"------------------------------------------------------------------------------"
-"                    V e r s i o n   i n f o r m a t i o n                     "
-"------------------------------------------------------------------------------"
-" $Id:: Makefile 4 2011-07-08 12:59:30 tonk                                 $: "
-" $Revision:: 4                                                             $: "
-" $Author:: Ton Kersten <tonk@tonkersten.com>                               $: "
-" $Date:: 2011-07-08 13:01:55 +0200 (Fri, 08 Jul 2011)                      $: "
-" $Hash:: 8929dba52be50420ddee975d3a433657ba45bb2d (tonk)                   $: "
-"------------------------------------------------------------------------------"
-"             E n d   o f   v e r s i o n   i n f o r m a t i o n              "
-"------------------------------------------------------------------------------"
-
-"------------------------------------------------------------------------------"
-" General settings, for all files                                              "
-"------------------------------------------------------------------------------"
+" Use vim settings, rather then vi settings (much better!)
+" This must be first, because it changes other options as a side effect.
 set nocompatible				" vim like real VI. You're nuts!!
-set number						" I like these old-fashioned line numbers
-set bs=2						" allow backspacing over everything
-set ai							" always set autoindenting on
-set nobackup					" do not keep a backup file
-set history=500					" keep 500 lines of command line history
-set ruler						" show the cursor position all the time
-set incsearch					" do incremental searching
-set ignorecase					" make the search easier
-set viminfo=					" no viminfo stuff
-set noerrorbells				" stop whining about everything
-set modeline					" allow the last line to be a mode line
-set modelines=10				" number of mode lines
-set showmode					" show the current mode !!YES!!
-set autoindent					" always set autoindenting on
-set showcmd						" display incomplete commands
-set backspace=indent,eol,start	" define how the backspace reacts
-set nolist						" do not show the list chars
-set listchars=tab:»·,trail:·	" but define how they should appear
-set paste						" start in 'paste' mode
-set noexpandtab					" keep tabs as they are
-set encoding=utf-8				" use utf-8 as default encoding
-set cursorcolumn				" Show where the cursor is
+
+" General settings, for all files
+syntax on
+set number							" I like these old-fashioned line numbers
+set bs=2							" allow backspacing over everything
+set ai								" always set autoindenting on
+set nobackup						" do not keep a backup file
+set noswapfile						" do not write annoying swapfiles
+set viminfo=						" no viminfo stuff
+set noerrorbells					" stop whining about everything
+set modeline						" allow the last line to be a mode line
+set modelines=10					" number of mode lines
+set showmode						" show the current mode !!YES!!
+set autoindent						" always set autoindenting on
+set showcmd							" display incomplete commands
+set backspace=indent,eol,start		" define how the backspace reacts
+set shiftround						" use multiple of shiftwidth when indenting
+set copyindent						" copy indentation on autoindenting
+set scrolloff=4						" keep 4 lines off the edges of the screen
+set nolist							" do not show the list chars
+set listchars=tab:»·,trail:·		" but define how they should appear
+set paste							" start in 'paste' mode
+set noexpandtab						" keep tabs as they are
+set encoding=utf-8					" use utf-8 as default encoding
+set cursorcolumn					" show where the cursor is
+"set virtualedit=all					" allow the cursor to go in to "invalid" places
+set fileformats="unix,dos,mac"		" which types are supported
+set hlsearch						" highlight search terms
+set incsearch						" show search matches as you type
+set formatoptions+=1				" when wrapping paragraphs, don't end lines
+									"    with 1-letter words (looks stupid)
 
 if v:version >= 700
 	set numberwidth=4
@@ -48,15 +49,11 @@ endif
 behave xterm
 set selectmode=mouse
 
-"------------------------------------------------------------------------------"
-" Highlighting whitespaces at end of line                                      "
-"------------------------------------------------------------------------------"
+" Highlighting whitespaces at end of line
 autocmd Filetype * highlight WhitespaceEOL ctermbg=blue guibg=blue
 autocmd Filetype * match WhitespaceEOL /\s\+$/
 
-"------------------------------------------------------------------------------"
-" The status line                                                              "
-"------------------------------------------------------------------------------"
+" The status line
 set laststatus=2
 set statusline=
 set statusline+=%f\ 							" filename (basename)
@@ -70,9 +67,7 @@ set statusline+=Char:0x%-5B						" character value
 set statusline+=Pos:%-8(%l,%c%)					" line, character
 set statusline+=%<%P							" file position
 
-"------------------------------------------------------------------------------"
-" Spell checking                                                               "
-"------------------------------------------------------------------------------"
+" Spell checking
 if v:version >= 700
 	setlocal spell spelllang=nl
 	set nospell
@@ -84,38 +79,26 @@ if v:version >= 700
 	map <silent> <F4> :set spell!<CR>
 endif
 
-"------------------------------------------------------------------------------"
-" Plugins                                                                      "
-"------------------------------------------------------------------------------"
+" Plugins
 nnoremap <F5> :NERDTree<CR>
 nnoremap <F6> :GundoToggle<CR>
 
-"------------------------------------------------------------------------------"
-" Don't use Ex mode, use Q for formatting                                      "
-"------------------------------------------------------------------------------"
+" Don't use Ex mode, use Q for formatting
 map Q gq
 map q gq}
 
-"------------------------------------------------------------------------------"
-" Make p in Visual mode replace the selected text                              "
-"------------------------------------------------------------------------------"
+" Make p in Visual mode replace the selected text
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 
-"------------------------------------------------------------------------------"
-" Always switch syntax hilighting on, but use my own colors                    "
-"------------------------------------------------------------------------------"
+" Always switch syntax hilighting on, but use my own colors
 if $TERM_PROFILE == 'cursus'
 	set background=light
 else
 	set background=dark
 	colorscheme tonk
 endif
-syntax on
-set hlsearch
 
-"------------------------------------------------------------------------------"
-" Only do this part when compiled with support for autocommands                "
-"------------------------------------------------------------------------------"
+" Only do this part when compiled with support for autocommands
 if has("autocmd")
 	" Enable file type detection.
 	" Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -133,9 +116,7 @@ if has("autocmd")
 	\ endif
 endif " has("autocmd")
 
-"------------------------------------------------------------------------------"
-" If we do have a GUI                                                          "
-"------------------------------------------------------------------------------"
+" If we do have a GUI
 if has("gui_running")
 	set guifont=Terminus\ 10
 
@@ -168,9 +149,7 @@ if has("gui_running")
 	set guioptions-=R
 endif
 
-"------------------------------------------------------------------------------"
-" Special settings for LaTeX files                                             "
-"------------------------------------------------------------------------------"
+" Special settings for LaTeX files
 augroup tex
 	autocmd!
 
@@ -182,9 +161,7 @@ augroup tex
 	"autocmd BufEnter *.tex set formatoptions=croqtam
 augroup END
 
-"------------------------------------------------------------------------------"
-" Special settings for mutt mail                                               "
-"------------------------------------------------------------------------------"
+" Special settings for mutt mail
 augroup mutt
 	autocmd!
 
@@ -202,9 +179,7 @@ augroup mutt
 	autocmd BufEnter mutt-* map q gq}
 augroup END
 
-"------------------------------------------------------------------------------"
-" Special settings for Markdown                                                "
-"------------------------------------------------------------------------------"
+" Special settings for Markdown
 augroup md
 	autocmd!
 
@@ -222,9 +197,7 @@ augroup md
 	autocmd BufEnter *.md,*.mkd,*.pdc map q gq}
 augroup END
 
-"------------------------------------------------------------------------------"
-" Nice handy trick for gnupg files                                             "
-"------------------------------------------------------------------------------"
+" Nice handy trick for gnupg files
 augroup gpg
 	autocmd!
 	autocmd BufReadPre,FileReadPre *.gpg set viminfo=
@@ -236,9 +209,7 @@ augroup gpg
 	autocmd VimLeave *.gpg :!clear
 augroup END
 
-"------------------------------------------------------------------------------"
-" Some things handy for syntax highlighting                                    "
-"------------------------------------------------------------------------------"
-let myfiletypefile = "/home/tonk/.vim/filetype.vim"
-let mysyntaxfile = "/home/tonk/.vim/syntax.vim"
+" Some things handy for syntax highlighting
+let myfiletypefile = "~/.vim/filetype.vim"
+let mysyntaxfile = "~/.vim/syntax.vim"
 syntax on
