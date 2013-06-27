@@ -11,6 +11,33 @@ endif
 
 let g:colors_name = "tonk"
 
+
+" map a urxvt cube number to an xterm-256 cube number
+fun! <SID>M(a)
+    return strpart("0135", a:a, 1) + 0
+endfun
+
+" map a urxvt colour to an xterm-256 colour
+fun! <SID>X(a)
+    if &t_Co == 88
+        return a:a
+    else
+        if a:a == 8
+            return 237
+        elseif a:a < 16
+            return a:a
+        elseif a:a > 79
+            return 232 + (3 * (a:a - 80))
+        else
+            let l:b = a:a - 16
+            let l:x = l:b % 4
+            let l:y = (l:b / 4) % 4
+            let l:z = (l:b / 16)
+            return 16 + <SID>M(l:x) + (6 * <SID>M(l:y)) + (36 * <SID>M(l:z))
+        endif
+    endif
+endfun
+
 hi Normal		  guifg=white  guibg=black
 hi Scrollbar	  guifg=darkcyan guibg=cyan
 hi Menu			  guifg=black guibg=cyan
@@ -38,8 +65,12 @@ hi Error          term=reverse ctermbg=Red ctermfg=White guibg=Red guifg=White
 hi Todo			  term=standout  ctermfg=black	ctermbg=Yellow  guifg=black  guibg=Yellow
 hi cursorline     cterm=underline ctermbg=none ctermfg=none gui=underline guibg=black
 hi LineNr         ctermbg=none ctermfg=lightcyan guifg=darkred
-hi StatusLine	  term=underline ctermfg=darkblue ctermbg=yellow
-hi StatusLineNC   term=bold ctermfg=darkblue ctermbg=yellow
+"hi StatusLine	  term=underline ctermfg=darkblue ctermbg=gray
+"hi StatusLineNC   term=none ctermfg=darkblue ctermbg=yellow
+
+exec "hi StatusLine     cterm=BOLD   ctermfg=" . <SID>X(90) . " ctermbg=" . <SID>X(81)
+exec "hi StatusLineNC   cterm=NONE   ctermfg=" . <SID>X(84) . " ctermbg=" . <SID>X(81)
+
 " Spelling
 hi clear SpellBad
 hi clear SpellLocal
