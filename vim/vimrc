@@ -184,6 +184,7 @@ augroup md
 	autocmd!
 
 	autocmd BufEnter *.md,*.mkd,*.pdc match ErrorMsg /\%>72v.\+/
+	autocmd BufEnter *.md,*.mkd,*.pdc set filetype=mkd
 	autocmd BufEnter *.md,*.mkd,*.pdc set nopaste
 	autocmd BufEnter *.md,*.mkd,*.pdc set digraph
 	autocmd BufEnter *.md,*.mkd,*.pdc set nohlsearch
