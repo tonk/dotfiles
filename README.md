@@ -27,6 +27,7 @@ This `[include]` part is introduced in `git` version 1.7.10 and
 allows for inclusion of a personal file.
 
 My `~/.gitconfig.private` contains something like
+
 ~~~~~~~~~~{.terminal}
 [user]
 	name = Ton Kersten
