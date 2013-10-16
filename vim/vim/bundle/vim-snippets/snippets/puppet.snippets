@@ -94,43 +94,79 @@ snippet [
 snippet >
 	${1} => ${0}
 snippet p:
-	'puppet:///${1:module name}/${0:file name}',
+	"puppet:///modules/${module_name}/${0:file name}",
 snippet case_osfamily
 	case $::osfamily {
-		RedHat: {
+		'RedHat'  : {
 		}
 
-		Debian: {
+		'Debian'  : {
 		}
 
-		FreeBSD: {
+		'FreeBSD' : {
 		}
 
-		default: {
+		default   : {
 			fail("Module '${module_name}': ${::osfamily} v ${::lsbmajdistrelease} not supported!")
+		}
+	}
+
+snippet case_osfamily_wheel
+	case $::osfamily {
+		'FreeBSD' : {
+			$config_group = 'wheel'
+		}
+
+		default   : {
+			$config_group = 'root'
 		}
 	}
 
 snippet case_operatingsystem
 	case $::operatingsystem {
-		CentOS  : {
+		'CentOS'  : {
 		}
 
-		RedHat : {
+		'RedHat'  : {
 		}
 
-		Debian : {
+		'Debian'  : {
 		}
 
-		Ubuntu : {
+		'Ubuntu'  : {
 		}
 
-		FreeBSD : {
+		'FreeBSD' : {
 		}
 
-		default: {
+		default   : {
 			fail("Module '${module_name}': ${::operatingsystem} v ${::lsbmajdistrelease} not supported!")
 		}
+	}
+
+snippet case_lsbdistcodename_ubuntu
+	case $::lsbdistcodename
+		'lucid'   : {
+		}
+
+		'precise' : {
+		}
+
+		default   : {
+			fail("Module '${module_name}': ${::operatingsystem} v ${::lsbdistcodename} not supported!")
+		}
+	}
+
+snippet nagios
+	# Nagios / Icinga Service config
+	@@nagios_service { "check_${1:name}_${::fqdn}" :
+		check_command         => "check_nrpe_command!-H ${::fqdn}!-c check_${2:$1}!-a ${3:parameters}",
+		service_description   => "${4:Description} ${::fqdn}",
+		host_name             => $::fqdn,
+		max_check_attempts    => $::icinga::max_check_attempts,
+		notification_period   => $::icinga::notification_period,
+		notifications_enabled => $::icinga::notifications_enabled,
+		target                => "${::icinga::targetdir}/services/${::fqdn}.cfg",
 	}
 
 #
@@ -178,7 +214,7 @@ snippet warning
 snippet cron
 	cron { '${1:name}' :
 		ensure  => present,
-		command	=> '${2}',
+		command => '${2}',
 		user    => '${3:root}',
 		hour    => '${4:0}',
 		minute  => '${5:0}',
@@ -187,23 +223,26 @@ snippet cron
 
 snippet exec
 	exec { '${1:name}' :
-		command	=> '${2:$1}',
-		user	=> '${3:root}',
-		${4}	=> ${0},
+		command => '${2:$1}',
+		user    => '${3:root}',
+		${4}    => ${0},
 	}
 
 snippet user
 	user { '${1:user}' :
 		ensure     => present,
 		comment    => '${2:$1}',
-		managehome => true,
 		home       => '${0:/home/$1}',
-		managehome => ${0:false}
+		managehome => ${0:false},
+		uid        => '${3:1xxx}',
+		gid        => '${4:$3}',
+		${5}       => ${0},
 	}
 
 snippet group
 	group { '${1:group}' :
 		ensure => ${0:present},
+		gid    => '${4}',
 	}
 
 snippet host
@@ -231,8 +270,8 @@ snippet package
 
 snippet yumrepo
 	yumrepo { '${1:repo name}' :
-		descr	=> '${2:$1}',
-		enabled	=> ${0:true},
+		descr   => '${2:$1}',
+		enabled => ${0:true},
 	}
 
 snippet define
@@ -251,9 +290,9 @@ snippet service
 snippet file
 	file { '${1:path}' :
 		ensure => present,
-		source => 'puppet:///modules/${2:`vim_snippets#Filename(expand('%:p:s?.*modules/??:h:h'), 'name')`}/${3:file name}',
-		owner  => ${4:root},
-		group  => ${5:root},
-		mode   => '${6:0644}',
+		source => "puppet:///modules/${module_name}/${2:file name}",
+		owner  => ${3:root},
+		group  => ${4:root},
+		mode   => '${5:0644}',
 	}
 
