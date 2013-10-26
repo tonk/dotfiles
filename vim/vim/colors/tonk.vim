@@ -81,6 +81,12 @@ hi SpellCap       term=underline cterm=underline gui=underline
 hi SpellRare      term=underline cterm=underline gui=underline
 hi SpellLocal     term=underline cterm=underline gui=underline
 
+
+hi Pmenu		ctermfg=white	ctermbg=DarkBlue
+hi PmenuSel		ctermfg=Black	ctermbg=white
+hi PmenuSbar	ctermfg=white	ctermbg=DarkBlue
+hi PmenuThumb	ctermfg=white	ctermbg=DarkGreen
+
 hi link IncSearch		Visual
 hi link String			Constant
 hi link Character		Constant
