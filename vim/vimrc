@@ -215,8 +215,8 @@ augroup puppet
 	autocmd BufEnter *.pp set ai
 	autocmd BufEnter *.pp set ts=4
 	autocmd BufEnter *.pp set sw=4
-	autocmd BufEnter *.pp map f :Tabular block<CR>
-	autocmd BufEnter *.pp map t :% !unexpand --tabs=4 --first-only<CR>
+	autocmd BufEnter *.pp map <silent> f :Tabular block<CR>
+	autocmd BufEnter *.pp map <silent> t :% !unexpand --tabs=4 --first-only<CR>
 augroup END
 
 
