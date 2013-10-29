@@ -1,7 +1,7 @@
 # Snippets for use with VIM and http://www.vim.org/scripts/script.php?script_id=2540
 #
-# Please contact R.I.Pienaar <rip@devco.net> for additions and feedback,
-# see it in action @ http://www.devco.net/archives/2009/09/22/vim_and_puppet.php
+# Based on the Puppet Snippets of  R.I.Pienaar <rip@devco.net>.
+# Added a lot for my own
 
 # Header to match http://docs.puppetlabs.com/guides/style_guide.html#puppet-doc
 snippet classheader
@@ -10,7 +10,9 @@ snippet classheader
 	# vi: set sw=4 ts=4 ai:
 	#
 	# Class  : ${1:`vim_snippets#Filename(expand('%:p:s?.*modules/??:h:h'), 'name')`}
-	# Author : `g:snips_author` <`g:snips_email`> - `strftime("%Y-%m-%d")`
+	# Author : `g:snips_author`
+	# Email  : `g:snips_email`
+	# Date   : `strftime("%Y-%m-%d")`
 	#
 	class $1 (${3}) {
 		${4}
@@ -157,6 +159,19 @@ snippet case_lsbdistcodename_ubuntu
 		}
 	}
 
+snippet case_lsbmajdistrelease_redhat
+	case $::lsbmajdistrelease
+		'5'   : {
+		}
+
+		'6' : {
+		}
+
+		default   : {
+			fail("Module '${module_name}': ${::operatingsystem} v ${::lsbmajdistrelease} not supported!")
+		}
+	}
+
 snippet nagios
 	# Nagios / Icinga Service config
 	@@nagios_service { "check_${1:name}_${::fqdn}" :
@@ -169,6 +184,8 @@ snippet nagios
 		target                => "${::icinga::targetdir}/services/${::fqdn}.cfg",
 	}
 
+snippet notify
+	notify {'${1:Notify message}' : }
 #
 # Functions
 snippet alert
@@ -188,7 +205,11 @@ snippet extlookup Extlookup with defaults
 snippet extlookup Extlookup with defaults and custom data file
 	extlookup("${1:variable}", "${2:default}", "${3:data source}")
 snippet hiera
-	hiera('${1:variable}')
+	hiera('${1:variable}', '')
+snippet hiera_array
+	hiera_array('${1:variable}', '')
+snippet hiera_hash
+	hiera_hash('${1:variable}', '')
 snippet fail
 	fail("${1:message}")
 snippet info
@@ -213,7 +234,7 @@ snippet warning
 # Types
 snippet cron
 	cron { '${1:name}' :
-		ensure  => present,
+		ensure  => ${0:present},
 		command => '${2}',
 		user    => '${3:root}',
 		hour    => '${4:0}',
@@ -230,13 +251,15 @@ snippet exec
 
 snippet user
 	user { '${1:user}' :
-		ensure     => present,
+		ensure     => ${0:present},
 		comment    => '${2:$1}',
 		home       => '${0:/home/$1}',
 		managehome => ${0:false},
 		uid        => '${3:1xxx}',
 		gid        => '${4:$3}',
+		shell      => '${0:/bin/bash}',
 		${5}       => ${0},
+		require    => Group['${1}'],
 	}
 
 snippet group
@@ -247,13 +270,13 @@ snippet group
 
 snippet host
 	host { '${1:hostname}' :
-		ensure => present,
+		ensure => ${0:present},
 		ip     => ${0:127.0.0.1},
 	}
 
 snippet mailalias
 	mailalias { '${1:localpart}' :
-		ensure    => present,
+		ensure    => ${0:present},
 		recipient => '${0:recipient}',
 	}
 
@@ -283,16 +306,24 @@ snippet service
 	service { '${1:service}' :
 		ensure     => ${2:running},
 		enable     => ${3:true},
-		hasrestart => true,
-		hasstatus  => true,
+		hasrestart => ${0:true},
+		hasstatus  => ${0:true},
 	}
 
 snippet file
 	file { '${1:path}' :
-		ensure => present,
+		ensure => ${0:present},
 		source => "puppet:///modules/${module_name}/${2:file name}",
 		owner  => ${3:root},
 		group  => ${4:root},
 		mode   => '${5:0644}',
 	}
+
+snippet stages
+	# Define run stages
+	stage { 'pre'  : }
+	stage { 'post' : }
+	Stage['pre']
+		-> Stage['main']
+		-> Stage['post']
 

@@ -39,6 +39,7 @@ set cursorcolumn					" show where the cursor is
 set fileformats="unix,dos,mac"		" which types are supported
 set hlsearch						" highlight search terms
 set incsearch						" show search matches as you type
+set nofoldenable					" I do not like that folding stuff
 set formatoptions+=1				" when wrapping paragraphs, don't end lines
 									"    with 1-letter words (looks stupid)
 
