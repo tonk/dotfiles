@@ -38,6 +38,10 @@ set cursorcolumn					" show where the cursor is
 "set virtualedit=all					" allow the cursor to go in to "invalid" places
 set fileformats="unix,dos,mac"		" which types are supported
 set hlsearch						" highlight search terms
+set ignorecase						" ignore case when searching
+set smartcase						" ignore case if search pattern is all lowercase,
+set smarttab						" insert tabs on the start of a line according to sw
+set hlsearch						" highlight search terms
 set incsearch						" show search matches as you type
 set nofoldenable					" I do not like that folding stuff
 set formatoptions+=1				" when wrapping paragraphs, don't end lines
@@ -93,6 +97,12 @@ endif
 " Don't use Ex mode, use Q for formatting
 map Q gq
 map q gq}
+
+" For CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'ra'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.tgz,*.gz
 
 " Always switch syntax hilighting on, but use my own colors
 if $TERM_PROFILE == 'cursus'
