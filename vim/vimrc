@@ -86,7 +86,7 @@ set statusline+=%<%P							" file position
 if v:version >= 700
 	setlocal spell spelllang=nl
 	set nospell
-	set spellfile=~/.vim/spell/spellfile.tonk.add
+	set spellfile=~/.vim/spell/spellfile.add
 	autocmd Filetype tex set spell
 	autocmd Filetype plaintex set spell
 	map <silent> <F2> :set spelllang=nl<CR>
@@ -110,7 +110,7 @@ if $TERM_PROFILE == 'cursus'
 	set background=light
 else
 	set background=dark
-	colorscheme tonk
+	colorscheme midnight
 endif
 
 " Only do this part when compiled with support for autocommands

@@ -9,7 +9,7 @@ if exists("syntax_on")
 	syntax reset
 endif
 
-let g:colors_name = "tonk"
+let g:colors_name = "midnight"
 
 
 " map a urxvt cube number to an xterm-256 cube number
