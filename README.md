@@ -8,9 +8,15 @@ I am running this on Linux and Mac OS X
 
 ## Installation
 
+Some of the tools for Vim are Vim Bundle things. I added them as Git
+submodules. After a clean repository clone these modules need to be
+cloned as well.
+
 ~~~~~~~~~~{.terminal}
 git clone git://github.com/tonk/dotfiles ~/.dotfiles
 cd ~/.dotfiles
+git submodule init
+git submodule update
 make install
 ~~~~~~~~~~
 
@@ -18,7 +24,7 @@ But be **very** carefull. This **will** overwrite what you have got now!!
 
 After installing, open a new terminal window to see the effects.
 
-Feel free to customize the files file to match your preference.
+Feel free to customize the files to match your preference.
 
 ## git configuration
 
@@ -32,7 +38,7 @@ My `~/.gitconfig.private` contains something like
 [user]
 	name = Ton Kersten
 	email = weblog@tonkersten.com
-        hostname = developer
+	hostname = developer
 
 [github]
 	token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -46,11 +52,24 @@ check the contents of the files before removing so you don't lose custom
 settings.
 
 ~~~~~~~~~~{.terminal}
+#
+# For ZSH
+#
 rm ~/.zshenv
 rm ~/.zshprofile
 rm -rf ~/.zsh
 #
+# For Vim
+#
+rm -rf ~/.vim
+rm ~/.vimrc
+#
+# For TMux
+#
 rm ~/.tmux.conf
+#
+# For git
+#
 rm ~/.gitignore
 rm ~/.gitconfig
 ~~~~~~~~~~
