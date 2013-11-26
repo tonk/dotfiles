@@ -24,9 +24,9 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 pathmunge ~/.mutt/bin
 pathmunge ~/bin/we-blog
 pathmunge ~/bin/fpc/bin
-pathmunge /usr/local/texlive/2012/bin/x86_64-linux
-pathmunge /usr/local/texlive/2012/bin/i386-linux
-pathmunge /usr/local/texlive/2012/bin/universal-darwin
+pathmunge /usr/local/texlive/2013/bin/x86_64-linux
+pathmunge /usr/local/texlive/2013/bin/i386-linux
+pathmunge /usr/local/texlive/2013/bin/universal-darwin
 pathmunge /usr/local/bind/bin
 pathmunge /usr/local/bind/sbin
 pathmunge /opt/local/sbin
