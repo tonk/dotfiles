@@ -99,28 +99,28 @@ snippet p:
 	"puppet:///modules/${module_name}/${0:file name}",
 snippet case_osfamily
 	case $::osfamily {
-		'RedHat'  : {
+		'RedHat'    : {
 		}
 
-		'Debian'  : {
+		'Debian'    : {
 		}
 
-		'Suse'  : {
+		'Suse'      : {
 		}
 
-		'Gentoo'  : {
+		'Gentoo'    : {
 		}
 
-		'Archlinux'  : {
+		'Archlinux' : {
 		}
 
-		'FreeBSD' : {
+		'FreeBSD'   : {
 		}
 
-		'Solaris' : {
+		'Solaris'   : {
 		}
 
-		default   : {
+		default     : {
 			fail("Module '${module_name}': ${::osfamily} v ${::lsbmajdistrelease} not supported!")
 		}
 	}
@@ -189,7 +189,7 @@ snippet case_operatingsystem
 		'OpenIndiana' : {
 		}
 
-		default   : {
+		default       : {
 			fail("Module '${module_name}': ${::operatingsystem} v ${::lsbmajdistrelease} not supported!")
 		}
 	}
