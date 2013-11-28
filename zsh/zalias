@@ -5,9 +5,8 @@
 #------------------------------------------------------------------------------#
 # $Id:: zalias 15 2009-09-18 14:04:12Z tonk                                 $: #
 # $Revision:: 15                                                            $: #
+# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
 # $Date:: 2009-09-30 16:19:44 +0200 (Wed, 30 Sep 2009)                      $: #
-# $Author:: Ton Kersten <Ton.Kersten@ATComputing.nl>                        $: #
-# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
 #------------------------------------------------------------------------------#
 
 # Get rid of the 'RedHat' aliases. They annoy me

@@ -5,9 +5,8 @@
 #------------------------------------------------------------------------------#
 # $Id:: zprompt 12 2009-08-09 15:37:50Z tonk                                $: #
 # $Revision:: 12                                                            $: #
-# $Author:: Ton Kersten <TonK@Wanadoo.nl>                                   $: #
+# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
 # $Date:: 2009-08-09 17:37:50 +0200 (Sun, 09 Aug 2009)                      $: #
-# $Hash:: 02096d275fe3ed27440585bf575f39e072d8d88f (tonk)                   $: #
 #------------------------------------------------------------------------------#
 
 # load prompt functions
