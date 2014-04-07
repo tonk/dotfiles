@@ -10,12 +10,14 @@
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
-# The terminfo directory and the terminal                                      #
+# The terminal settings and the terminal (Switch to plain screen if no 256    #
 #------------------------------------------------------------------------------#
 if [[ ${TERM} == screen* ]]
 then
-	T="s/${TERM}"
-	if [[ ( ! -e "/lib/terminfo/${T}" ) && ( ! -e "/usr/share/terminfo/${T}" ) ]]
+	T="${TERM}"
+	if [[ ! (	-e "/lib/terminfo/s/${T}"					|| \
+				-e "/usr/share/terminfo/s/${T}"				|| \
+				-e "/opt/local/share/terminfo/73/${TERM}" ) ]]
 	then
 		export TERM=screen
 	fi
