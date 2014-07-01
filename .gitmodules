@@ -22,3 +22,6 @@
 [submodule "vim/vim/bundle/vim-gitgutter"]
 	path = vim/vim/bundle/vim-gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
+[submodule "vim/vim/bundle/vim-puppet"]
+	path = vim/vim/bundle/vim-puppet
+	url = https://github.com/rodjek/vim-puppet.git
