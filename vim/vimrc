@@ -34,7 +34,7 @@ set listchars=tab:»·,trail:·		" but define how they should appear
 "set paste							" start in 'paste' mode
 set noexpandtab						" keep tabs as they are
 set encoding=utf-8					" use utf-8 as default encoding
-set cursorcolumn					" show where the cursor is
+"set cursorcolumn					" show where the cursor is
 "set virtualedit=all					" allow the cursor to go in to "invalid" places
 set fileformats="unix,dos,mac"		" which types are supported
 set hlsearch						" highlight search terms
@@ -224,14 +224,13 @@ augroup END
 augroup puppet
 	autocmd!
 	" Define a retab command for Puppet manifest files
-	autocmd BufEnter *.pp set noexpandtab
+	autocmd BufEnter *.pp set expandtab
 	autocmd BufEnter *.pp set ai
-	autocmd BufEnter *.pp set ts=4
-	autocmd BufEnter *.pp set sw=4
+	autocmd BufEnter *.pp set ts=2
+	autocmd BufEnter *.pp set sw=2
 	autocmd BufEnter *.pp map <silent> f :Tabular block<CR>
-	autocmd BufEnter *.pp map <silent> t :% !unexpand --tabs=4 --first-only<CR>
+	autocmd BufEnter *.pp map <silent> t :% !expand --tabs=2 --first-only<CR>
 augroup END
-
 
 " Some things handy for syntax highlighting
 let myfiletypefile = "~/.vim/filetype.vim"
