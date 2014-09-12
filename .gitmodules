@@ -28,3 +28,9 @@
 [submodule "vim/vim/bundle/syntastic"]
 	path = vim/vim/bundle/syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "vim/vim/bundle/vim-airline"]
+	path = vim/vim/bundle/vim-airline
+	url = https://github.com/bling/vim-airline.git
+[submodule "powerline-fonts"]
+	path = powerline-fonts
+	url = https://github.com/Lokaltog/powerline-fonts.git
