@@ -232,6 +232,9 @@ augroup puppet
 	autocmd BufEnter *.pp map <silent> t :% !expand --tabs=2 --first-only<CR>
 augroup END
 
+" Use the Vim Airline. Do use the PowerLine fonts with Airline
+let g:airline_powerline_fonts = 1
+
 " Some things handy for syntax highlighting
 let myfiletypefile = "~/.vim/filetype.vim"
 let mysyntaxfile = "~/.vim/syntax.vim"
