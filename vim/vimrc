@@ -76,7 +76,8 @@ set statusline+=%f\ 							" filename (basename)
 set statusline+=%h%m%r%w						" status flags
 set statusline+=\[%{strlen(&ft)+2?&ft:'none'}]	" file type
 if v:version >= 700
-	set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
+	" set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
+	let g:airline_section_y = 'Spell:%-10{strpart("OffOn",&spell*3,3)."\ (".&spelllang.")"}'
 endif
 set statusline+=%=								" right align remainder
 set statusline+=Char:0x%-5B						" character value
