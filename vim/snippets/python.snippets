@@ -1,6 +1,5 @@
 snippet #!
-	#!/usr/bin/env python3
-	# -*- coding: utf-8 -*-
+	#!/usr/bin/env python
 snippet imp
 	import ${0:module}
 snippet uni
@@ -8,8 +7,40 @@ snippet uni
 		${0:representation}
 snippet from
 	from ${1:package} import ${0:module}
-# Module Docstring
-snippet docs
+# New library file
+snippet lib
+	#!/usr/bin/env python
+	# -*- coding: utf-8 -*-
+	"""
+		Filename     : ${1:`vim_snippets#Filename('$1.py', 'foo.py')`}
+		Author       : `g:snips_author`
+		Email        : `g:snips_email`
+		Organisation : `g:snips_organisation`
+		Copyright    : (c) `strftime("%Y")` - `g:snips_organisation`
+	"""
+	from __future__ import print_function
+	import globals
+	__docformat__ = "restructuredtext en"
+
+	import sys
+
+	def _main(cmn):
+		"""
+			Main routine, just for testing.
+		"""
+		globals._log.debug("Entering %s" % (globals.whoami()))
+
+		# This is just a stub
+		sys.stderr.write("This is a library file. Do not run directly")
+
+		globals._log.debug("Leaving %s" % (globals.whoami()))
+		return False
+
+
+	if __name__ == '__main__':
+		sys.exit(not _main(None))
+
+snippet doc
 	"""
 	File: ${1:`vim_snippets#Filename('$1.py', 'foo.py')`}
 	Author: `g:snips_author`

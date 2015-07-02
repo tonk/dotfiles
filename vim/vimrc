@@ -61,6 +61,7 @@ call pathogen#incubate()
 let snips_author="Ton Kersten"
 let snips_email="Github@TonKersten.com"
 let snips_github="http://github.com/tonk"
+let snips_organisation="Smart Owl Consulting"
 
 " Plugins
 nnoremap <F5> :NERDTree<CR>
