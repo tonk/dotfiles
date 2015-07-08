@@ -9,7 +9,7 @@ snippet from
 	from ${1:package} import ${0:module}
 # New library file
 snippet lib
-	#!/usr/bin/env python
+	#!/usr/bin/env python3
 	# -*- coding: utf-8 -*-
 	"""
 		Filename     : ${1:`vim_snippets#Filename('$1.py', 'foo.py')`}
@@ -18,8 +18,7 @@ snippet lib
 		Organisation : `g:snips_organisation`
 		Copyright    : (c) `strftime("%Y")` - `g:snips_organisation`
 	"""
-	from __future__ import print_function
-	import globals
+	import globs
 	__docformat__ = "restructuredtext en"
 
 	import sys
@@ -28,12 +27,12 @@ snippet lib
 		"""
 			Main routine, just for testing.
 		"""
-		globals._log.debug("Entering %s" % (globals.whoami()))
+		globals.LOG.debug("Entering %s" % (globs.whoami()))
 
 		# This is just a stub
 		sys.stderr.write("This is a library file. Do not run directly")
 
-		globals._log.debug("Leaving %s" % (globals.whoami()))
+		globals.LOG.debug("Leaving %s" % (globs.whoami()))
 		return False
 
 
