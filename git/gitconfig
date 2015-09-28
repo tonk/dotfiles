@@ -9,6 +9,12 @@
 # $Date:: 2012-07-24 08:47:51 +0200 (Tue, 24 Jul 2012)                      $: #
 #------------------------------------------------------------------------------#
 
+#------------------------------------------------------------------------------#
+# For this to work, you need git version > 1.7.10                              #
+#------------------------------------------------------------------------------#
+[include]
+	path = ~/.gitconfig.private
+
 [core]
 	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	pager = less -FRSX
@@ -65,6 +71,33 @@
 	history-view-vpane-position = 456
 	show-graph = true
 
+
+# rewrites
+[url "git@github.com:"]
+	insteadOf = "gh:"
+	insteadOf = "git://github.com"
+	pushInsteadOf = "github:"
+	pushInsteadOf = "git://github.com/"
+    pushInsteadOf = "https://github.com/"
+[url "git@gist.github.com:"]
+	insteadOf = "gst:"
+	pushInsteadOf = "gist:"
+	pushInsteadOf = "git://gist.github.com/"
+	pushInsteadOf = "https://gist.github.com/"
+
+# Any GitHub repo with my username should be checked out r/w by default
+# http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
+
+[url "git@github.com:tonk/"]
+	insteadOf = "git://github.com/tonk/"
+[help]
+	autocorrect = 1
+
+# push easily. http://stackoverflow.com/a/23918418/89484
+[push]
+	default = current
+
+
 [alias]
 	ls = ls-files
 	st = status
@@ -78,6 +111,7 @@
 	cca = commit -a --amend -C HEAD
 	last = log --name-status -1 HEAD
 	timeline = log --graph \"--pretty=format:%C(192)%h%Creset by %C(bold magenta)%an%Creset (%ar)%C(182)%d%Creset%n%s%n%b\" --all
+	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 
 	#merges
 	ours = "!f() { git co --ours $@ && git add $@; }; f"
