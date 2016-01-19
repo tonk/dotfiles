@@ -3,10 +3,9 @@
 #------------------------------------------------------------------------------#
 
 #------------------------------------------------------------------------------#
-# $Id:: Makefile 5 2013-05-14 11:47:01 tonk                                 $: #
-# $Revision:: 5                                                             $: #
+# $Id:: Makefile 5 2016-01-19 08:38 tonk                                    $: #
+# $Revision:: 6                                                             $: #
 # $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2013-05-14 11:47:09 +0200 (Tue, 14 May 2013)                      $: #
 #------------------------------------------------------------------------------#
 
 install:
@@ -29,3 +28,6 @@ install:
 	install -p -m 644 git/gitignore		$(HOME)/.gitignore
 	install -p -m 644 git/gitattributes	$(HOME)/.gitattributes
 	install -p -m 644 git/gitconfig		$(HOME)/.gitconfig
+	#
+	install -p -d -m 755 i3				$(HOME)/.i3
+	cp -rp i3/*							$(HOME)/.i3

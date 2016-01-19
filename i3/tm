@@ -1,0 +1,19 @@
+#!/bin/bash
+# vi: set sw=4 ts=4 ai:
+
+# Start in the HOME directory
+cd
+
+# Start or reattach tmux
+if tmux has-session > /dev/null 2>&1
+then
+	cmd="attach-session -d"
+fi
+
+# Start with a program?
+if [[ ${#} == 0 ]]
+then
+	tmux -2 -u -l ${cmd:-}
+else
+	tmux -2 -u -l ${cmd:-} "${@:-}"
+fi

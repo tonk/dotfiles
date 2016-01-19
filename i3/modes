@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# 1280x1024 @ 60.00 Hz (GTF) hsync: 63.60 kHz; pclk: 108.88 MHz
+# Modeline "1280x1024_60.00"  108.88  1280 1360 1496 1712  1024 1025 1028 1060  -HSync +Vsync
+m1=$(gtf 1280 1024 60 | grep 'Modeline' | sed 's/Modeline[         ]*//')
+m2=$(gtf 1920 1080 60 | grep 'Modeline' | sed 's/Modeline[         ]*//')
+m1n=$(echo "${m1}" | awk '{ print $1 }')
+m2n=$(echo "${m1}" | awk '{ print $1 }')
+
+xrandr --newmode ${m1}
+xrandr --addmode DP1 ${m1n}
+xrandr --output DP1 --mode ${m1n}
+
+xrandr --newmode ${m2}
+xrandr --addmode DP1 ${m2n}
+xrandr --output DP1 --mode ${m2n}
+
