@@ -363,6 +363,15 @@ snippet file
 		mode   => '${5:0644}',
 	}
 
+snippet template
+	file { '${1:path}' :
+		ensure  => ${0:present},
+		content => template(${2:file name}),
+		owner   => ${3:root},
+		group   => ${4:root},
+		mode    => '${5:0644}',
+	}
+
 snippet stages
 	# Define run stages
 	stage { 'pre'  : }

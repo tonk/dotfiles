@@ -77,7 +77,7 @@ set statusline+=%f\ 							" filename (basename)
 set statusline+=%h%m%r%w						" status flags
 set statusline+=\[%{strlen(&ft)+2?&ft:'none'}]	" file type
 if v:version >= 700
-	" set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
+	set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
 	let g:airline_section_y = 'Spell:%-10{strpart("OffOn",&spell*3,3)."\ (".&spelllang.")"}'
 endif
 set statusline+=%=								" right align remainder
@@ -226,12 +226,12 @@ augroup END
 augroup puppet
 	autocmd!
 	" Define a retab command for Puppet manifest files
-	autocmd BufEnter *.pp set expandtab
+	autocmd BufEnter *.pp set noexpandtab
 	autocmd BufEnter *.pp set ai
-	autocmd BufEnter *.pp set ts=2
-	autocmd BufEnter *.pp set sw=2
+	autocmd BufEnter *.pp set ts=4
+	autocmd BufEnter *.pp set sw=4
 	autocmd BufEnter *.pp map <silent> f :Tabular block<CR>
-	autocmd BufEnter *.pp map <silent> t :% !expand --tabs=2 --first-only<CR>
+	autocmd BufEnter *.pp map <silent> t :% !unexpand --tabs=4 --first-only<CR>
 augroup END
 
 " Use the Vim Airline. Do use the PowerLine fonts with Airline
