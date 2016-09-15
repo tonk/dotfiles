@@ -7,6 +7,17 @@
 "     vim -u NONE
 "
 
+" The spell files can be downloaded from the internet.
+" This is where I get them:
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.spl
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.sug
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.sug
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.spl
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.spl
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.sug
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.spl
+"    wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.sug
+
 " Use vim settings, rather then vi settings (much better!)
 " This must be first, because it changes other options as a side effect.
 set nocompatible				" vim like real VI. You're nuts!!
@@ -57,7 +68,7 @@ set selectmode=mouse
 " Load Pathogen
 execute pathogen#infect()
 call pathogen#helptags()
-call pathogen#incubate()
+call pathogen#infect('bundle/{}')
 let snips_author="Ton Kersten"
 let snips_email="Github@TonKersten.com"
 let snips_github="http://github.com/tonk"

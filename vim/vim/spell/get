@@ -1,0 +1,8 @@
+wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.spl
+wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.sug
+wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.sug
+wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.spl
+wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.spl
+wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.sug
+wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.spl
+wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.sug
