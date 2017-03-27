@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Toggle sound
+# This script is called from ~/.config/.i3/config
+
+amixer -c1 set Master toggle >/dev/null 2>&1
+state=$(amixer -c1 get Master | \
+	awk '$1 ~ /Mono:/ { gsub(/[\[\]]/, ""); print $6}')
+notify-send "Volume: ${state}"

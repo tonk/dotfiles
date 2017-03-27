@@ -1,0 +1,760 @@
+##############################################################################################################################################################
+#
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+#
+# Comments start with a # and can only be used at the beginning of a line.
+#
+##############################################################################################################################################################
+#
+# i3 --moreversion
+#
+##############################################################################################################################################################
+#
+### Basic settings
+#
+set $mod            Mod4
+set $alt            Mod1
+set $terminal       /usr/bin/terminator --geometry 800x600
+set $lockscreen     /home/serge/bin/lock
+set $suspend        systemctl suspend
+
+# color defines
+set $dark                   #000000
+set $light                  #FFFFFF
+set $grey                   #777777
+set $focus                  #FFFF00
+set $ginsys                 #1D396A
+set $red                    #FF0000
+set $IGNORED                #000000
+
+# workspaces
+set $ws_chat        1
+set $ws_www         2
+set $ws_tool2       9
+set $ws_tool        10
+set $ws_util1       21
+set $ws_util2       22
+#set $ws_
+
+# Xresources settings
+set_from_resource $outpri i3.output.primary     eDP1
+set_from_resource $outsec i3.output.secondary   eDP1
+
+##############################################################################################################################################################
+#
+### Early commands
+#
+
+# set the right default sink before we launch i3status
+#exec --no-startup-id  paudioctl sink
+
+# Display stuff
+exec --no-startup-id xset +dpms
+# Make sure we have a primary before launching tray icons
+exec --no-startup-id xrandr --output eDP-1 --primary
+
+# wifi disabled by default
+#exec --no-startup-id nmcli radio wifi off
+
+# disable audible bell at Xorg level
+exec --no-startup-id xset -b
+
+##############################################################################################################################################################
+#
+## Colors, borders, layout, fonts
+#
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below. ISO 10646 = Unicode
+#font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# The font above is very space-efficient, that is, it looks good, sharp and
+# clear in small sizes. However, if you need a lot of unicode glyphs or
+# right-to-left text rendering, you should instead use pango for rendering and
+# chose a FreeType font, such as:
+font pango:FontAwesome 8, Terminus 8
+
+##############################################################################################################################################################
+#
+## Client Container Colors
+#
+
+# border colour is the color for the 2 horizontal lines of the titlebar; the
+# border of the whole container is the same as the background of the title bar!
+#
+## client windows       border              background          text                indicator (indicates vertical or horizontal split)
+#
+# A client which is not the focused one of its container.
+client.unfocused        $dark               $dark               $light              $dark
+
+# A client currently focused in its container, but does not have focus now.
+client.focused_inactive $dark               $grey               $light              $dark
+
+# A client which currently has the focus.
+client.focused          $focus              $focus              $dark               $ginsys
+
+# A client which has its urgency hint activated.
+client.urgent           $red                $red                $light              $red
+
+#Background and text color are used to draw placeholder window contents (when restoring layouts). Border and indicator are ignored.
+client.placeholder      $IGNORED            $dark               $dark               $IGNORED
+
+##############################################################################################################################################################
+#
+# status bar
+#
+bar {
+        colors {
+
+            # Text color to be used for the separator.
+            separator           $ginsys
+
+            # Text color to be used for the statusline.
+            statusline          $light
+
+            # Background color of the bar.
+            background          $dark
+
+
+            ## type             border              background      text
+
+            # workspace button when the workspace does not have focus and is not
+            # active (visible) on any output. This will be the case for most workspaces.
+            inactive_workspace  $dark               $dark           $grey
+
+            # Border, background and text color for a workspace button when the workspace is active (visible) on some output, but the focus is on
+            # another one. You can only tell this apart from the focused workspace when you are using multiple monitors.
+            active_workspace    $grey               $dark           $grey
+
+            # color for a workspace button when the workspace has focus.
+            focused_workspace   $light              $ginsys         $light
+
+            # Border, background and text color for a workspace button when the workspace window with the urgency hint set.
+            urgent_workspace    $red                $dark          $red
+
+        }
+
+        id main
+        #status_command i3status
+        # https://github.com/ultrabug/py3status
+        status_command py3status -c ~/.i3/i3status.conf # -d -l /home/serge/.log/pystatus.log
+
+        # tray_output <none|primary|output>
+        tray_output primary
+
+        # By default, a padding of 2 pixels is used for the upper, lower and
+        # right-hand side of the tray area and between the individual icons.
+        # tray_padding <px> [px]
+        tray_padding 0
+
+        # custom symbol to be used for the separator as opposed to the
+        # vertical, one pixel thick separator.
+        # separator_symbol <symbol>
+        separator_symbol "■" # unicode ctrl+shift+25a0
+
+        # position <top|bottom>
+        position top
+
+        # mode <dock|hide|invisible>
+        mode dock
+
+        # hidden_state <hide|show>
+        hidden_state hide
+
+        # modifier <Modifier>
+        modifier $mod
+
+        # font <font>
+        #  the order in which fonts are “declared” for use in i3bar actually
+        #  matters. The first font in the list shall be the one containing
+        #  icons, the latter the one for plain text
+        font pango:FontAwesome 8, Terminus 8
+
+        # workspace_buttons <yes|no>
+        workspace_buttons yes
+
+        # binding_mode_indicator <yes|no>
+        # Specifies whether the current binding mode indicator should be shown
+        # or not. This is useful if you want to hide the workspace buttons but
+        # still be able to see the current binding mode indicator.
+        binding_mode_indicator yes
+
+}
+
+##############################################################################################################################################################
+#
+## workspace and window properties
+#
+
+# Automatically putting workspaces on specific screens
+#workspace 0     output $outpri
+workspace 1     output $outpri
+workspace 2     output $outpri
+workspace 3     output $outpri
+workspace 4     output $outpri
+workspace 5     output $outpri
+workspace 6     output $outpri
+workspace 7     output $outpri
+workspace 8     output $outpri
+workspace 9     output $outpri
+workspace 10    output $outpri
+workspace 11    output $outpri
+workspace 12    output $outpri
+workspace 13    output $outpri
+workspace 14    output $outpri
+workspace 15    output $outsec
+workspace 16    output $outsec
+workspace 17    output $outsec
+workspace 18    output $outsec
+workspace 18    output $outsec
+workspace 19    output $outsec
+workspace 20    output $outsec
+workspace 21    output $outsec
+
+#focus_on_window_activation smart|urgent|focus|none
+focus_on_window_activation urgent
+
+# When a new window appears, it will be focused. The no_focus directive allows
+# preventing this from happening
+no_focus [window_role="pop-up"]
+
+# mouse settings
+focus_follows_mouse yes
+
+# Focus on window activation
+# smart: (default) If the window requesting focus is on an active workspace, it will receive the focus. Otherwise, the urgency hint will be set.
+# urgent: The window will always be marked urgent, but the focus will not be stolen.
+# focus: The window will always be focused and not be marked urgent.
+# none: The window will neither be focused, nor be marked urgent.
+focus_on_window_activation none
+
+# If activated, marks on windows are drawn in their window decoration. However, any mark starting with an underscore in its name (_)
+# will not be drawn even if this option is activated.
+show_marks yes
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# <default|stacking|tabbed>
+workspace_layout default
+
+# split orientation <horizontal|vertical|auto>
+default_orientation auto
+
+# popup_during_fullscreen <smart|ignore|leave_fullscreen>
+popup_during_fullscreen smart
+
+# force_focus_wrapping <yes|no>
+force_focus_wrapping no
+
+# This configuration directive enables automatic workspace back_and_forth when
+# switching to the workspace that is currently focused.
+workspace_auto_back_and_forth no
+
+# If an application on another workspace sets an urgency hint, switching to
+# this workspace may lead to immediate focus of the application, which also
+# means the window decoration color would be immediately resetted to
+# client.focused. This may make it unnecessarily hard to tell which window
+# originally raised the event. In order to prevent this, you can tell i3 to
+# delay resetting the urgency state by a certain time using the
+# force_display_urgency_hint directive.
+# Setting the value to 0 disables this feature. The default is 500ms.
+force_display_urgency_hint 3000 ms
+
+# <none|vertical|horizontal|both|smart> :
+hide_edge_borders smart
+
+
+##############################################################################################################################################################
+#
+## Client default rules, seems to be put after the assignments & rules
+#
+
+# new window default border <normal|1pixel|none|pixel> :
+new_window  pixel 2
+new_float   pixel 2
+
+##############################################################################################################################################################
+#
+# Window management
+#
+# split in horizontal orientation
+bindsym $mod+h split h
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+e layout toggle split
+bindsym $mod+w layout tabbed
+#bindsym $mod+s layout stacking
+# Toggle between stacking/tabbed/split:
+#bindsym $mod+z layout toggle
+# Toggle between stacking/tabbed/splith/splitv:
+#bindsym $mod+w layout toggle all
+
+# Show border or not
+bindsym $mod+b border toggle
+
+# Set window sticky
+bindsym $mod+s sticky toggle
+
+# toggle tiling / floating
+#bindsym $mod+Control+space floating toggle
+bindsym $mod+t floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+##############################################################################################################################################################
+#
+# Navigation
+#
+
+#
+## numbers - named workspaces
+#
+
+# switch to workspace
+#bindsym $mod+grave workspace 0
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+bindsym $mod+F1 workspace 11
+bindsym $mod+F2 workspace 12
+bindsym $mod+F3 workspace 13
+bindsym $mod+F4 workspace 14
+bindsym $mod+F5 workspace 15
+bindsym $mod+F6 workspace 16
+bindsym $mod+F7 workspace 17
+bindsym $mod+F8 workspace 18
+bindsym $mod+F9 workspace 19
+bindsym $mod+F10 workspace 20
+bindsym $mod+F11 workspace 21
+bindsym $mod+F12 workspace 22
+
+# move focused container to workspace
+#bindsym $mod+Control+grave move container to workspace 0
+bindsym $mod+Control+1 move container to workspace 1
+bindsym $mod+Control+2 move container to workspace 2
+bindsym $mod+Control+3 move container to workspace 3
+bindsym $mod+Control+4 move container to workspace 4
+bindsym $mod+Control+5 move container to workspace 5
+bindsym $mod+Control+6 move container to workspace 6
+bindsym $mod+Control+7 move container to workspace 7
+bindsym $mod+Control+8 move container to workspace 8
+bindsym $mod+Control+9 move container to workspace 9
+bindsym $mod+Control+0 move container to workspace 10
+bindsym $mod+Control+F1 move container to workspace 11
+bindsym $mod+Control+F2 move container to workspace 12
+bindsym $mod+Control+F3 move container to workspace 13
+bindsym $mod+Control+F4 move container to workspace 14
+bindsym $mod+Control+F5 move container to workspace 15
+bindsym $mod+Control+F6 move container to workspace 16
+bindsym $mod+Control+F7 move container to workspace 17
+bindsym $mod+Control+F8 move container to workspace 18
+bindsym $mod+Control+F9 move container to workspace 19
+bindsym $mod+Control+F10 move container to workspace 20
+bindsym $mod+Control+F11 move container to workspace 21
+bindsym $mod+Control+F12 move container to workspace 22
+
+# move focused container to workspace
+#bindsym $mod+Shift+grave move container to workspace 0
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+F1 move container to workspace 11
+bindsym $mod+Shift+F2 move container to workspace 12
+bindsym $mod+Shift+F3 move container to workspace 13
+bindsym $mod+Shift+F4 move container to workspace 14
+bindsym $mod+Shift+F5 move container to workspace 15
+bindsym $mod+Shift+F6 move container to workspace 16
+bindsym $mod+Shift+F7 move container to workspace 17
+bindsym $mod+Shift+F8 move container to workspace 18
+bindsym $mod+Shift+F9 move container to workspace 19
+bindsym $mod+Shift+F10 move container to workspace 20
+bindsym $mod+Shift+F11 move container to workspace 21
+bindsym $mod+Shift+F12 move container to workspace 22
+
+#
+## tab
+#
+
+# switch container focus
+bindsym $mod+Tab focus right
+bindsym $mod+Shift+Tab focus left
+
+# switch to the next and previous workspace
+bindsym $mod+Control+Tab workspace next
+bindsym $mod+Control+Shift+Tab workspace prev
+
+#
+## left right down up
+#
+
+# switch container focus
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+
+# move focused container
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# switch to the next and previous workspace
+bindsym $mod+Control+Left workspace prev
+bindsym $mod+Control+Down workspace next
+bindsym $mod+Control+Up workspace prev
+bindsym $mod+Control+Right workspace next
+
+# move container to the next and previous workspace
+bindsym $mod+Shift+Control+Left move workspace to output left
+bindsym $mod+Shift+Control+Down move workspace to output down
+bindsym $mod+Shift+Control+Up move workspace to output up
+bindsym $mod+Shift+Control+Right move workspace to output right
+
+#
+## PageUp PageDwn
+#
+
+# focus the parent/child container
+bindsym $mod+Prior focus parent
+bindsym $mod+Next focus child
+
+# Move the focused container to the next output
+bindsym $mod+Control+Prior move container to output left
+bindsym $mod+Control+Next move container to output right
+
+# Move the current workspace to the next output
+bindsym $mod+Shift+Prior move workspace to output left
+bindsym $mod+Shift+Next move workspace to output right
+
+##############################################################################################################################################################
+#
+### Special Modes
+#
+
+# resize window (you can also use the mouse for that)
+bindsym $mod+Control+r mode "resize"
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym $mod+Control+r mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+m focus floating; mode "moveit"
+mode "moveit" {
+        bindsym Up move up          50px
+        bindsym Left move left      50px
+        bindsym Down move down      50px
+        bindsym Right move right    50px
+        # back to normal: Enter or Escape
+        bindsym Mod4+m mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+e mode "$mode_system"
+set $mode_system (x) exit
+mode "$mode_system" {
+    bindsym x exec --no-startup-id i3-msg exit, mode "default"
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+##############################################################################################################################################################
+#
+## Key command assignments & application launchers
+#
+# xmodmap -pke
+
+# start a terminal
+bindsym $mod+Return exec $terminal
+
+# start a floating terminal
+bindsym $mod+Control+Return exec $terminal --role floating
+bindsym $mod+Shift+Return exec gnome-terminal --role floating
+
+# kill focused window
+bindsym $mod+x kill
+
+# quickswitch
+bindsym $mod+q exec quickswitch.py
+
+# start dmenu (a program launcher)
+bindsym $mod+r exec dmenu_run -i -p "Command:" -nb "$dark" -nf "$light" -sb "$ginsys" -sf "$light" \
+                                    -fn "-urw-*-*-r-*-*-*-100-*-*-*-*-*-*"
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# Lock Screen / Suspend / Poweroff
+bindsym Pause               exec --no-startup-id $lockscreen
+bindsym $mod+l              exec --no-startup-id $lockscreen
+bindsym $mod+Pause          exec --no-startup-id $suspend
+bindsym $mod+Control+l      exec --no-startup-id $suspend
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# start some tools
+bindsym $mod+i exec ircwindow
+bindsym $mod+c exec gnome-calculator
+bindsym $mod+d exec nautilus
+
+# start browsers
+bindsym $mod+Ctrl+o             exec chromium --incognito
+bindsym $mod+o                  exec chromium
+
+# Show current Background filename
+bindsym $mod+Control+b exec notify-send -u low "Current Background" `bgcurrent`
+
+# Toggle Presentation mode (disable screen saver and notifications)
+bindsym $mod+p exec presentation-mode
+# Toggle Nolock mode (disable screen saver)
+#bindsym $mod+Control+p exec presentation-mode nolock
+
+##############################################################################################################################################################
+#
+# volume and media controls, special keys
+#
+
+bindsym XF86AudioLowerVolume            exec --no-startup-id  ponymix decrease 5
+bindsym XF86AudioRaiseVolume            exec --no-startup-id  ponymix increase 5
+bindsym XF86AudioMute                   exec --no-startup-id  ponymix toggle
+
+bindsym $mod+Control+comma              exec --no-startup-id  ponymix decrease 5
+bindsym $mod+Control+period             exec --no-startup-id  ponymix increase 5
+bindsym $mod+Control+slash              exec --no-startup-id  ponymix toggle
+
+bindsym XF86AudioPrev                   exec --no-startup-id  playerctl previous
+bindsym XF86AudioPlay                   exec --no-startup-id  playerctl play-pause
+bindsym XF86AudioNext                   exec --no-startup-id  playerctl next
+
+bindsym Control+XF86AudioLowerVolume    exec --no-startup-id playerctl previous
+bindsym Control+XF86AudioRaiseVolume    exec --no-startup-id playerctl next
+bindsym Control+XF86AudioMute           exec --no-startup-id playerctl play-pause
+
+bindsym $mod+comma                      exec --no-startup-id playerctl previous
+bindsym $mod+period                     exec --no-startup-id playerctl next
+bindsym $mod+slash                      exec --no-startup-id playerctl play-pause
+
+# Fn-F4  XF86AudioMicMute
+
+# Fn-F5  XF86MonBrightnessDown
+bindsym XF86MonBrightnessDown exec --no-startup-id brightness-notify.sh down
+
+# Fn-F6  XF86MonBrightnessUp
+bindsym XF86MonBrightnessUp   exec --no-startup-id brightness-notify.sh up
+
+## Fn-F7 XF86Display
+bindsym XF86Display exec --no-startup-id rerandr3 restore
+bindsym Shift+XF86Display exec --no-startup-id xdisplcd
+bindsym $mod+Scroll_Lock exec --no-startup-id rerandr restore
+bindsym $mod+Shift+Scroll_Lock exec --no-startup-id xdisplcd
+
+# Fn-F9  XF86Tools
+
+# Fn-F10 XF86Search
+# Screenshot
+bindsym --release Print                       exec --no-startup-id screengrab select
+bindsym --release XF86Search                  exec --no-startup-id screengrab select
+bindsym --release Shift+Print                 exec --no-startup-id screengrab window
+bindsym --release Shift+XF86Search            exec --no-startup-id screengrab window
+bindsym --release Control+Print               exec --no-startup-id screengrab screen
+bindsym --release Control+XF86Search          exec --no-startup-id screengrab screen
+bindsym --release Shift+Control+Print         exec --no-startup-id screengrab full
+bindsym --release Shift+Control+XF86Search    exec --no-startup-id screengrab full
+
+# Fn-F11 XF86LaunchA
+# Fn-F12 XF86Explorer
+
+
+##############################################################################################################################################################
+#
+## Window assignments & rules
+#
+# Assignments are processed by i3 in the order in which they appear in the
+# config file. The first one which matches the window wins and later
+# assignments are not considered.
+# Maar volgens mij is het omgekeerd.
+#
+#
+
+###############################################################################
+#
+# various rules
+#
+# float windows
+for_window [window_role="task_dialog|app|bubble|pop-up|page-info|Preferences"] floating enable
+for_window [title="Steam - Update*|Event Tester|Taakbeheer -*"] floating enable
+for_window [instance="qtpass|vitetris|xfontsel|xfd|gpicsview|gufw.py|Toplevel|gvim|arandr|blueman-manager|blueman-services|lxappearance|catfish|pavucontrol|pavumeter|transmission-gtk|xpad|galculator|engrampa|eom|sun-awt-X11-XFramePeer|net-minecraft-bootstrap-Bootstrap|guvcview|gpicview|simplescreenrecorder|radiotray|mate-search-tool|qtfm|yad|gsimplecal|deluge|WiFi-Menu|mate-dictionary|system-config-printer.py|dconf-editor|stalonetray"] floating enable
+for_window [instance="crx_dcklljkfaobhfnaedpcomheadfemjkji|crx_aohghmighlieiainnegkcijnfilokake|crx_aohghmighlieiainnegkcijnfilokake|crx_pkclgpgponpjmpfokoepglboejdobkpl|crx_hjaaapkoiljkjpgpfgckfielajkdjhik|ald.mindbrain.io"] floating disable #jb live|google books|docs|inbox|netflix
+
+# http://build.i3wm.org/docs/userguide.html#_list_of_commands
+for_window [window_type="(dialog|dialog|utility|toolbar|splash|menu|dropdown_menu|popup_menu|tooltip)"] floating enable
+
+# Don’t focus window upon opening
+no_focus [window_role="pop-up"]
+
+# terminals
+for_window [window_role="floating"]     floating enable, move position mouse
+
+# Tools
+for_window [window_role="SSHASKPASS"]                                                   floating enable, border pixel 5
+for_window [class="Gcalctool"]                                                          floating enable, move position mouse
+for_window [class="Dropbox" instance="dropbox" title="Dropbox Preferences"]             floating enable, move position mouse
+for_window [class="Nautilus" instance="file_progress"]                                  floating enable, move position mouse
+for_window [class="(Totem|Vlc)" instance="(totem|vlc)"]                                 floating enable, move position mouse
+for_window [class="Gnome-control-center" instance="gnome-control-center"]               floating enable, move position mouse
+for_window [title="Event Tester"]                                                       floating enable, move position mouse  # xev
+for_window [class="Keybase" instance="keybase" window_role="browser-window"]            floating enable
+#for_window [class="Seafile-applet" instance="seafile-applet" title="Seafile"]           floating enable, move position mouse
+
+###############################################################################
+#
+# Browsers
+#
+#assign      [class="chromium-browser" instance="chromium-browser" window_role="browser"]    $ws_www
+#assign      [class="chromium" instance="chromium" window_role="browser"]                    $ws_www
+#assign      [class="google-chrome"    instance="google-chrome"    window_role="browser"]    $ws_www
+#assign      [class="Firefox"          instance="Navigator"        window_role="browser"]    $ws_www
+for_window  [class="chromium" instance="chromium" window_role="browser"]                     layout tabbed
+for_window  [class="(Google-chrome|Chromium-browser|Chromium|chromiium|Firefox)" \
+             instance="(Toplevel|Browser)" \
+             window_role="(*settings|*Options|*Preferences|pop-up|setup|About|Organizer)" ]  floating enable
+###############################################################################
+#
+# chat
+#
+assign      [window_role="irc"]                 $ws_chat
+assign      [class="(HipChat|Franz)"]           $ws_util1
+for_window  [class="(HipChat|Franz)"]           layout tabbed
+for_window  [window_role="irc"]                 layout tabbed
+
+for_window  [class="Skype"]                     floating enable
+
+###############################################################################
+#
+# large screen tools
+#
+# Virtualbox
+assign [class="VirtualBox"]     $ws_tool
+for_window [class="VirtualBox"] layout tabbed
+
+# Wireshark
+assign [class="Wireshark" instance="wireshark"] $ws_tool
+for_window [class="Wireshark" instance="wireshark"] layout tabbed
+
+# Remote Desktop Client
+assign [class="Remmina" instance="remmina"]     $ws_tools
+for_window [class="Remmina" instance="remmina"] layout tabbed
+
+# Teamviewer
+assign [class="Wine" instance="TeamViewer.exe"] $ws_tool
+for_window [class="Wine" instance="TeamViewer.exe"]     floating enable, move position mouse
+for_window [class="Wine" instance="TeamViewer.exe" title="!(Computers & Contacts|TeamViewer)"] layout tabbed
+
+# Gimp
+assign      [class="Gimp" instance="gimp"] $ws_tool2
+for_window  [class="Gimp" instance="gimp" title="GNU Image Manipulation Program" window_role="gimp-image-window"] layout tabbed
+
+###############################################################################
+#
+# side tools
+#
+# KeePass
+# https://faq.i3wm.org/question/2067/focus-on-a-window-of-a-certain-class-unless-it-has-a-certain-title/?answer=2068#post-id-2068
+for_window  [title="(KeePass|KeePass2|Open Database File|Select key file manually|Plugins|Edit Group)" class="^(?!KeePass2)" \
+            instance="^(!?keepass2)"] floating enable
+assign [class="KeePass2" instance="keepass2" title="^(?!KeePassHttp: Confirm Access)"]              $ws_util2
+assign [title="(KeePass|KeePass2|Open Database File|Select key file manually|?!KeePassHttp:)"]      $ws_util2
+for_window [title="(KeePass|KeePass2|Open Database File|Select key file manually|?!KeePassHttp:)"]  layout tabbed
+
+# Music
+assign     [class="(Spotify|nuvolaplayer|rhythmbox|Tomahawk)"]  $ws_util2
+# https://github.com/i3/i3/issues/2060#issuecomment-155179472
+for_window [class="Spotify"]                                    move to workspace $ws_util2
+for_window [class="(Spotify|nuvolaplayer|rhythmbox|Tomahawk)"]  layout tabbed
+
+# https://worklogassistant.com
+for_window [class="Worklog Assistant" instance="Worklog Assistant" title="^Worklog Assistant"]          floating enable
+for_window [class="Worklog Assistant" instance="Worklog Assistant" title="^Worklog Assistant"]          sticky enable
+assign [class="Worklog Assistant" instance="Worklog Assistant" title="Main Window — Worklog Assistant"] $ws_util1
+
+
+
+##############################################################################################################################################################
+#
+## startup
+#
+# & send process to background avoids keeping the calling sh shells in memory
+
+## One-off always run jobs
+exec_always --no-startup-id "setbg redisplay"
+exec_always --no-startup-id "numlockx on"
+exec_always --no-startup-id "vertical-mouse-settings" # Configure Vertical Mouse
+# http://blog.ssokolow.com/archives/2011/12/24/getting-your-way-with-setxkbmap/
+exec_always setxkbmap -layout us -variant euro -model pc105 -option -option compose:caps -option lv3:ralt_switch \
+                        -option terminate:ctrl_alt_bkspc -option eurosign:e -option nbsp:level3n # set keyboard
+
+## Run at i3 initial start only
+exec --no-startup-id compton &
+exec --no-startup-id dunst -print %
+#exec --no-startup-id xautolock -detectsleep -time 7 -locker /home/serge/bin/lock &
+# start with interactive bash shell as this needs ssh keys to be unlocked
+exec sleep 3; /usr/bin/terminator --role=SSHASKPASS --geometry 400x50 -x /bin/bash -i -c 'echo ; ircwindow &' ## KEEP THIS FIRST
+# i3wm desktop managing stuff runing in a screen - long running user services where I might want to interact
+exec --no-startup-id "launch-i3jobs"
+exec --no-startup-id "syndaemon -dkRi 0.5"
+
+# Desktop Apps
+exec "pasystray"
+exec "nm-applet &"
+exec "sleep 15; dropbox start &"
+exec "sleep 15; seafile-applet &"
+#exec "bash -c 'while sleep 1; do xfce4-power-manager --no-daemon; done' &"
+#exec "keepass2 &"
+

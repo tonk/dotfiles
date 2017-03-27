@@ -1,0 +1,71 @@
+#!/bin/bash
+# vi: set sw=4 ts=4 ai:
+
+shopt -s nullglob globstar
+
+typeit=0
+if [[ $1 == "--type" ]]
+then
+	typeit=1
+	shift
+fi
+
+
+STARTDIR=${PASSWORD_STORE_DIR-~/.password-store}
+BASEDIR=$STARTDIR
+DONE=0
+LEVEL=0
+PREVSELECTION=""
+SELECTION=""
+
+# Where to put stuff when selecting
+export PASSWORD_STORE_X_SELECTION="primary"
+
+while [[ "$DONE" -eq 0 ]]
+do
+	password_files=( "$STARTDIR"/* )
+	password_files=( "${password_files[@]#"$STARTDIR"/}" )
+	password_files=( "${password_files[@]%.gpg}" )
+
+	if [[ "$LEVEL" -ne 0 ]]
+	then
+		password_files=(".." "${password_files[@]}")
+	fi
+	password_files="$( echo "${password_files}" | sort )"
+	entry=$(printf '%s\n' "${password_files[@]}" | dmenu "$@" -fn "Source Code Pro-12" -nb "#909000" -nf "#000000" -sb "#0000f0" -l 15 -p '> ')
+
+	echo "entry: $entry"
+	if [[ -z $entry ]]
+	then
+		DONE=1
+		exit
+	fi
+
+	if [[ "$entry" != ".." ]]
+	then
+		PREVSELECTION=$SELECTION
+		SELECTION="$SELECTION/$entry"
+
+		# check if another dir
+		if [[ -d "$STARTDIR/$entry" ]]
+	 then
+			STARTDIR="$STARTDIR/$entry"
+			LEVEL=$(( LEVEL + 1 ))
+		else
+			# not a directory so it must be a real password entry
+			if [[ $typeit -eq 0 ]]
+			then
+				# pass show "$SELECTION" 2>/dev/null | head -1 | xclip -sel prim -i
+				pass show -c "$SELECTION" 2>/dev/null
+			else
+				xdotool - <<<"type --clearmodifiers -- $(pass show "$SELECTION" | head -n 1)"
+			fi
+			DONE=1
+		fi
+	else
+		LEVEL=$((LEVEL-1))
+		SELECTION=$PREVSELECTION
+		STARTDIR="$BASEDIR/$SELECTION"
+	fi
+done
+

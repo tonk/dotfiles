@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Toggle sound
+# This script is called from ~/.config/.i3/config
+
+amixer -c1 set Capture toggle >/dev/null 2>&1
+state=$(amixer -c1 get Capture | \
+	awk '/Left:/ { gsub(/[\[\]]/, ""); print $7}')
+notify-send "Micro: ${state}"

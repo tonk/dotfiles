@@ -1,0 +1,13 @@
+#!/bin/bash
+
+sw="${HOME}/.i3/bin/xkb-switch"
+
+stat=$(${sw})
+if [[ ${stat} == *\(* ]]
+then
+	stat=${stat##*(}
+	stat=${stat%)}
+fi
+echo "${stat:0:2}"
+echo "${stat:0:2}"
+echo ""

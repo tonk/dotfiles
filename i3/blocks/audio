@@ -1,0 +1,25 @@
+#!/bin/bash
+
+CARD="1"
+
+case "${BLOCK_BUTTON}"
+in
+	1) amixer -c${CARD} -q sset Master 2%+		;;
+	2) amixer -c${CARD} -q sset Master toggle	;;
+	3) amixer -c${CARD} -q sset Master 2%-		;;
+esac
+
+statusLine=$(amixer -c${CARD} get Master | tail -n 1)
+status=$(echo "${statusLine}" | grep -wo "on")
+volume=$(echo "${statusLine}" | awk -F ' ' '{print $4}' | tr -d '[]%')
+
+if [[ "${status}" == "on" ]]
+then
+	echo "${volume}%"
+	echo "${volume}%"
+	echo ""
+else
+	echo "off"
+	echo "off"
+	echo ""
+fi

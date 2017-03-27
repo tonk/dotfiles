@@ -1,0 +1,31 @@
+#!/bin/bash
+
+CARD="1"
+pony="${HOME}/.i3/bin/ponymix"
+
+# Left click
+if [[ "${BLOCK_BUTTON}" -eq 1 ]]
+then
+  ${pony} -c${CARD} increase 2
+# Middle click
+elif [[ "${BLOCK_BUTTON}" -eq 2 ]]
+then
+  ${pony} -c${CARD} toggle
+# Right click
+elif [[ "${BLOCK_BUTTON}" -eq 3 ]]
+then
+  ${pony} -c${CARD} decrease 2
+fi
+
+volume=$(${pony} -c 1 get-volume)
+${pony} -c${CARD} is-muted && status="off" || status="on"
+
+if [[ "${status}" == "on" ]]; then
+  echo "${volume}%"
+  echo "${volume}%"
+  echo ""
+else
+  echo "off"
+  echo "off"
+  echo ""
+fi

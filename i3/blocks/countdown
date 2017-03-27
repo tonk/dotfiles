@@ -1,0 +1,48 @@
+#!/bin/bash
+
+END_DATE="${BLOCK_INSTANCE}"
+
+if [[ x"${END_DATE}" == x"off" ]]
+then
+	exit 0
+fi
+
+URGENT_VALUE=86400
+
+if [[ "${END_DATE}" = "" ]]
+then
+	END_DATE=$(date --date "next Friday" "+%Y-%m-%d %H:%M:%S")
+fi
+
+END_DATE=$(date --date="${END_DATE}" '+%s')
+CUR_DATE=$(date "+%s")
+DIFF_DATE=$((END_DATE - CUR_DATE))
+DIFF=""
+
+if [[ "${DIFF_DATE}" -le 0 ]]
+then
+	DIFF=$(date -u -d "@$(( DIFF_DATE * -1))" +"%H:%M:%S")
+	echo "${DIFF}"
+	echo "${DIFF}"
+	echo ""
+	exit 33
+fi
+
+if [[ "${DIFF_DATE}" -ge 86400 ]]
+then
+	DIFF="[$((DIFF_DATE / 86400))] "
+	#DIFF_DATE=$((DIFF_DATE % 86400))
+fi
+
+DIFF+=$(date -u -d "@${DIFF_DATE}" +"%H:%M:%S")
+
+echo "${DIFF}"
+echo "${DIFF}"
+echo "#FCD116"
+
+if [[ "${DIFF_DATE}" -le "${URGENT_VALUE}" ]]
+then
+	exit 0
+else
+	exit 33
+fi

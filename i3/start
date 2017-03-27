@@ -1,0 +1,20 @@
+#!/bin/bash
+
+i3-msg 'workspace 2; exec /usr/bin/thunderbird'
+sleep 1
+if [[ -x /usr/bin/google-chrome ]]
+then
+	i3-msg 'workspace 3; exec /usr/bin/google-chrome'
+else
+	i3-msg 'workspace 3; exec /usr/bin/chromium-browser'
+fi
+sleep 1
+i3-msg 'workspace 4; exec /usr/bin/pidgin'
+sleep 1
+i3-msg 'workspace 5; exec /home/tonk/bin/Telegram'
+sleep 1
+i3-msg 'workspace 6; exec /usr/bin/corebird'
+sleep 1
+i3-msg 'workspace 7; exec /usr/bin/slack'
+##sleep 1
+##i3-msg 'workspace 7; exec /usr/bin/hipchat'

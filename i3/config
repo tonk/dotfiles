@@ -1,29 +1,59 @@
-# |===================================|
+# +===================================+
 # | i3wm config file                  |
 # | (c) nocopyright - for use by all  |
-# | created by Toshaan Bharvani       |
-# | changed by Ton Kersten            |
-# |===================================|
+# |                                   |
+# | Started as config by Toshaan,     |
+# | Heavily modified by Ton Kersten   |
+# +===================================+
 
 #force_xinerama yes
 
 # Set CapsLock to Super key (So I can keep using my Model M)
-#exec --no-startup-id "setxkbmap -option caps:hyper"
+exec --no-startup-id "setxkbmap -option caps:hyper"
 exec --no-startup-id "xmodmap ~/.i3/xmodmap"
+
+# Use Alt_Shift to switch from QWERTY to Programmers Dvorak / Plain Dvorak
+# But start with QWERTY for now. :-)
+# exec --no-startup-id "setxkbmap -layout 'us,us' -variant ',dvp' -option 'grp:alt_shift_toggle'"
+exec --no-startup-id "setxkbmap -layout 'us,us' -variant ',dvorak' -option 'grp:alt_shift_toggle'"
 
 # Define keys
 set $alt   Mod1
 set $ctrl  Control
+set $del   Delete
 set $shift Shift
 set $mod   Mod4
 
+# Define audio card. Use `aplay -l` to find the card number
+set $acard	1
+
 # set display variables
-set $display0 eDP1
-set $display1 HDMI2
-set $display2 DP1
+#
+# AT laptop
+#
+## set $display0 eDP1
+## set $display1 HDMI2
+## set $display2 DP1
+## set $primary eDP1
+#
+# Customer laptop in Docking
+#
+set $display0 DP2-1
+set $display1 DP2-2
+#set $display2 eDP1
+set $primary DP2-2
+#
+# Customer laptop on the move
+#
+## set $display0 eDP1
+## set $primary eDP1
+
+# Define $primary as the primary display
+exec --no-startup-id /usr/bin/xrandr --output $primary --primary
 
 # Set font
-font pango:DejaVu Sans Mono 10
+#font pango:DejaVu Sans Mono 10
+font pango: M+ 1m, FontAwesome, Ionicons, 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -32,13 +62,20 @@ floating_modifier $mod
 bindsym $mod+Return  exec gnome-terminal --hide-menubar --command ~/.i3/tm
 bindsym $ctrl+$alt+t exec gnome-terminal
 
+# Start KeepassX and Pass
+bindsym $ctrl+$mod+k exec /usr/bin/keepassx
+bindsym $ctrl+$mod+p exec ~/.i3/passmenu2
+
+# Start the PCMan File Manager
+bindsym $ctrl+$mod+f exec /usr/bin/pcmanfm
+
 # kill focused window
-bindsym $mod+Shift+q kill
+bindsym $mod+$shift+q kill
 bindsym $alt+F4 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d  exec dmenu_run -f -i -sf '#1c1c1c' -sb '#ff8800' -nf '#808080' -nb '#1c1c1c' -fn 'pango:DejaVu Sans Mono 10'
-bindsym $mod+m  exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+d exec dmenu_run -f -i -sf '#1c1c1c' -sb '#ff8800' -nf '#808080' -nb '#1c1c1c' -fn 'Source Code Pro-12'
+bindsym $mod+m exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -sf '#1c1c1c' -sb '#ff8800' -nf '#808080' -nb '#1c1c1c' -fn 'Source Code Pro-12'"
 
 # change focus
 bindsym $mod+j         focus left
@@ -47,27 +84,28 @@ bindsym $mod+l         focus up
 bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Left  focus left
-bindsym $mod+Down  focus down
-bindsym $mod+Up    focus up
-bindsym $mod+Right focus right
+bindsym $mod+Left      focus left
+bindsym $mod+Down      focus down
+bindsym $mod+Up        focus up
+bindsym $mod+Right     focus right
 
 # change focus with tab keys
-bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+Tab         workspace back_and_forth
+bindsym $mod+grave       workspace back_and_forth
 bindsym $ctrl+$alt+Left  workspace prev
 bindsym $ctrl+$alt+Right workspace next
 
 # move focused window
-bindsym $mod+Shift+j         move left
-bindsym $mod+Shift+k         move down
-bindsym $mod+Shift+l         move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+$shift+j         move left
+bindsym $mod+$shift+k         move down
+bindsym $mod+$shift+l         move up
+bindsym $mod+$shift+semicolon move right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left  move left
-bindsym $mod+Shift+Down  move down
-bindsym $mod+Shift+Up    move up
-bindsym $mod+Shift+Right move right
+bindsym $mod+$shift+Left      move left
+bindsym $mod+$shift+Down      move down
+bindsym $mod+$shift+Up        move up
+bindsym $mod+$shift+Right     move right
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -76,16 +114,19 @@ bindsym $mod+h split h
 bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen
-bindsym $mod+g fullscreen global
+bindsym $mod+F11 fullscreen
+bindsym $mod+g   fullscreen global
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
+# Set window sticky
+bindsym $mod+t sticky toggle
+
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+$shift+space floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
@@ -100,91 +141,79 @@ bindsym $mod+a focus parent
 bindsym $mod+x [urgent=latest] focus
 
 # put window on different output
-bindsym $mod+$shift+p move container to output $display0
-bindsym $mod+p        move container to output $display1
-bindsym $mod+$alt+p   move container to output $display2
+bindsym $mod+p        move container to output $display0
+bindsym $mod+$shift+p move container to output $display1
+#bindsym $mod+$alt+p   move container to output $display2
 
 # switch to workspace
-workspace 1 output $display0
-bindsym $ctrl+F1 workspace 1
-workspace 2 output $display0
-bindsym $ctrl+F2 workspace 2
-workspace 3 output $display0
-bindsym $ctrl+F3 workspace 3
-workspace 4 output $display0
-bindsym $ctrl+F4 workspace 4
-workspace 5 output $display0
-bindsym $ctrl+F5 workspace 5
-workspace 6 output $display0
-bindsym $ctrl+F6 workspace 6
-workspace 7 output $display0
-bindsym $ctrl+F7 workspace 7
-workspace 8 output $display0
-bindsym $ctrl+F8 workspace 8
-workspace 9 output $display0
-bindsym $ctrl+F9 workspace 9
+workspace  1 output $display0
+workspace  2 output $display0
+workspace  3 output $display0
+workspace  4 output $display0
+workspace  5 output $display0
+workspace  6 output $display0
+workspace  7 output $display0
+workspace  8 output $display0
+workspace  9 output $display0
 workspace 10 output $display0
-bindsym $ctrl+F10 workspace 10
+#
+bindsym $mod+F1  workspace 1
+bindsym $mod+F2  workspace 2
+bindsym $mod+F3  workspace 3
+bindsym $mod+F4  workspace 4
+bindsym $mod+F5  workspace 5
+bindsym $mod+F6  workspace 6
+bindsym $mod+F7  workspace 7
+bindsym $mod+F8  workspace 8
+bindsym $mod+F9  workspace 9
+bindsym $mod+F10 workspace 10
 #
 workspace 11 output $display1
-bindsym $ctrl+$shift+F1 workspace 11
 workspace 12 output $display1
-bindsym $ctrl+$shift+F2 workspace 12
 workspace 13 output $display1
-bindsym $ctrl+$shift+F3 workspace 13
 workspace 14 output $display1
-bindsym $ctrl+$shift+F4 workspace 14
 workspace 15 output $display1
-bindsym $ctrl+$shift+F5 workspace 15
 workspace 16 output $display1
-bindsym $ctrl+$shift+F6 workspace 16
 workspace 17 output $display1
-bindsym $ctrl+$shift+F7 workspace 17
 workspace 18 output $display1
-bindsym $ctrl+$shift+F8 workspace 18
 workspace 19 output $display1
-bindsym $ctrl+$shift+F9 workspace 19
 workspace 20 output $display1
-bindsym $ctrl+$shift+F10 workspace 20
+#
+bindsym $ctrl+$mod+F1  workspace 11
+bindsym $ctrl+$mod+F2  workspace 12
+bindsym $ctrl+$mod+F3  workspace 13
+bindsym $ctrl+$mod+F4  workspace 14
+bindsym $ctrl+$mod+F5  workspace 15
+bindsym $ctrl+$mod+F6  workspace 16
+bindsym $ctrl+$mod+F7  workspace 17
+bindsym $ctrl+$mod+F8  workspace 18
+bindsym $ctrl+$mod+F9  workspace 19
+bindsym $ctrl+$mod+F10 workspace 20
 
-# Beamer
-workspace 21 output $display2
-bindsym $alt+$shift+F1 workspace 21
-bindsym $alt+$shift+1 move container to workspace 21
-
+#
 # move focused container to workspace
-bindsym $ctrl+1 move container to workspace 1
-bindsym $ctrl+2 move container to workspace 2
-bindsym $ctrl+3 move container to workspace 3
-bindsym $ctrl+4 move container to workspace 4
-bindsym $ctrl+5 move container to workspace 5
-bindsym $ctrl+6 move container to workspace 6
-bindsym $ctrl+7 move container to workspace 7
-bindsym $ctrl+8 move container to workspace 8
-bindsym $ctrl+9 move container to workspace 9
-bindsym $ctrl+0 move container to workspace 10
+bindsym $mod+1        move container to workspace 1
+bindsym $mod+2        move container to workspace 2
+bindsym $mod+3        move container to workspace 3
+bindsym $mod+4        move container to workspace 4
+bindsym $mod+5        move container to workspace 5
+bindsym $mod+6        move container to workspace 6
+bindsym $mod+7        move container to workspace 7
+bindsym $mod+8        move container to workspace 8
+bindsym $mod+9        move container to workspace 9
+bindsym $mod+0        move container to workspace 10
 #
-bindsym $ctrl+$shift+1 move container to workspace 11
-bindsym $ctrl+$shift+2 move container to workspace 12
-bindsym $ctrl+$shift+3 move container to workspace 13
-bindsym $ctrl+$shift+4 move container to workspace 14
-bindsym $ctrl+$shift+5 move container to workspace 15
-bindsym $ctrl+$shift+6 move container to workspace 16
-bindsym $ctrl+$shift+7 move container to workspace 17
-bindsym $ctrl+$shift+8 move container to workspace 18
-bindsym $ctrl+$shift+9 move container to workspace 19
-bindsym $ctrl+$shift+0 move container to workspace 20
+bindsym $ctrl+$mod+1 move container to workspace 11
+bindsym $ctrl+$mod+2 move container to workspace 12
+bindsym $ctrl+$mod+3 move container to workspace 13
+bindsym $ctrl+$mod+4 move container to workspace 14
+bindsym $ctrl+$mod+5 move container to workspace 15
+bindsym $ctrl+$mod+6 move container to workspace 16
+bindsym $ctrl+$mod+7 move container to workspace 17
+bindsym $ctrl+$mod+8 move container to workspace 18
+bindsym $ctrl+$mod+9 move container to workspace 19
+bindsym $ctrl+$mod+0 move container to workspace 20
 #
-bindsym $ctrl+$alt+1 exec ~/.i3/focus_num.py 1
-bindsym $ctrl+$alt+2 exec ~/.i3/focus_num.py 2
-bindsym $ctrl+$alt+3 exec ~/.i3/focus_num.py 3
-bindsym $ctrl+$alt+4 exec ~/.i3/focus_num.py 4
-bindsym $ctrl+$alt+5 exec ~/.i3/focus_num.py 5
-bindsym $ctrl+$alt+6 exec ~/.i3/focus_num.py 6
-bindsym $ctrl+$alt+7 exec ~/.i3/focus_num.py 7
-bindsym $ctrl+$alt+8 exec ~/.i3/focus_num.py 8
-bindsym $ctrl+$alt+9 exec ~/.i3/focus_num.py 9
-
 # default workspace setttings
 workspace_layout tabbed
 default_orientation vertical
@@ -194,30 +223,28 @@ popup_during_fullscreen smart
 #force_focus_wrapping yes
 workspace_auto_back_and_forth yes
 force_display_urgency_hint 500 ms
+show_marks yes
 
 # Keyboard buttons
-bindsym XF86AudioRaiseVolume exec amixer sset Master '5%+'
-#bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master '5%+'
-#bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume 0 -- '+5%'
-bindsym XF86AudioLowerVolume exec amixer sset Master '5%-'
-#bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master '5%-'
-#bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume 0 -- '-5%'
-bindsym XF86AudioMute    exec ~/.i3/togglesound
-bindsym XF86AudioMicMute exec ~/.i3/togglemic
-#bindsym XF86AudioMute exec /usr/bin/pactl set-sink-volume 0 0
-#bindsym XF86AudioPlay exec /bin/clementine --play-pause
-#bindsym XF86AudioStop exec /bin/clementine --stop
-#bindsym XF86AudioPrev exec /bin/clementine --previous
-#bindsym XF86AudioNext exec /bin/clementine --next
-#bind on XF86AudioPlay exec cmus-remote -u
-#bind on XF86AudioPrev exec cmus-remote -r
-#bind on XF86AudioNext exec cmus-remote -n
-#bind on Control+XF86AudioLowerVolume exec cmus-remote -v -5%
-#bind on Control+XF86AudioRaiseVolume exec cmus-remote -v +5%
-#bindsym XF86ScreenSaver exec i3-msg workspace 13 && /usr/bin/xscreensaver-command -lock
-bindsym XF86MonBrightnessUp   exec xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10
-bindsym XF86TouchpadToggle    exec ~/.i3/togglekeypad
+bindsym XF86AudioRaiseVolume exec amixer -c $acard sset Master '2%+'
+bindsym XF86AudioLowerVolume exec amixer -c $acard sset Master '2%-'
+bindsym XF86AudioMute        exec amixer -c $acard sset Master toggle
+bindsym XF86AudioMicMute     exec amixer -c $acard sset Capture toggle
+#
+## bindsym XF86AudioRaiseVolume exec ~/.i3/bin/ponymix -c $acard increase 5
+## bindsym XF86AudioLowerVolume exec ~/.i3/bin/ponymix -c $acard decrease 5
+## bindsym XF86AudioMute        exec ~/.i3/bin/ponymix -c $acard toggle
+## bindsym XF86AudioMicMute     exec ~/.i3/bin/ponymix -c $acard --source toggle
+#
+bindsym XF86AudioPlay exec clementine --play-pause
+bindsym XF86AudioStop exec clementine --stop
+bindsym XF86AudioPrev exec clementine --previous
+bindsym XF86AudioNext exec clementine --next
+#
+bindsym XF86MonBrightnessUp   exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym XF86TouchpadToggle    exec ~/.i3/bin/togglekeypad
+#
 #bindsym XF86Tools
 #bindsym XF86Display
 #bindsym XF86Search
@@ -225,28 +252,28 @@ bindsym XF86TouchpadToggle    exec ~/.i3/togglekeypad
 #bindsym XF86Explorer
 
 # extra keyboard bindings
-bindsym Print            exec "sleep 0.2; /bin/scrot -s '/home/tonk/.screenshots/%Y-%m-%d_%H-%M-%s.png'"
-bindsym Shift+Print      exec "sleep 0.2; /bin/scrot    '/home/tonk/.screenshots/%Y-%m-%d_%H-%M-%s.png'"
-bindsym $mod+Shift+Print exec "sleep 0.2; /bin/scrot -m '/home/tonk/.screenshots/%Y-%m-%d_%H-%M-%s.png'"
+bindsym Print             exec "sleep 0.2; /usr/bin/scrot -s '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
+bindsym $shift+Print      exec "sleep 0.2; /usr/bin/scrot    '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
+bindsym $mod+$shift+Print exec "sleep 0.2; /usr/bin/scrot -m '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
 
 # lock screen
-bindsym $ctrl+$alt+l exec /usr/bin/xscreensaver-command -lock
+bindsym $ctrl+$mod+l    exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"
+bindsym Pause           exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"
+bindsym $ctrl+$alt+$del exec ~/.i3/blocks/shutdown_menu -c
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+$shift+c reload
+
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+$shift+r restart
 
 # Make the currently focused window a scratchpad
-bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+$shift+minus move scratchpad
 # Show the first scratchpad window
 bindsym $mod+minus scratchpad show
-# Show the sup-mail scratchpad window, if any.
-# bindsym mod4+s [title="^Sup ::"] scratchpad show
 
 # resize window (you can also use the mouse for that)
+bindsym $mod+r mode "resize"
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -254,10 +281,10 @@ mode "resize" {
         # Pressing right will grow the window???s width.
         # Pressing up will shrink the window???s height.
         # Pressing down will grow the window???s height.
-        bindsym j         resize shrink width  10 px or 10 ppt
-        bindsym k         resize grow   height 10 px or 10 ppt
-        bindsym l         resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow   width  10 px or 10 ppt
+        bindsym h     resize shrink width  10 px or 10 ppt
+        bindsym j     resize grow   height 10 px or 10 ppt
+        bindsym k     resize shrink height 10 px or 10 ppt
+        bindsym l     resize grow   width  10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left  resize shrink width  10 px or 10 ppt
@@ -269,17 +296,16 @@ mode "resize" {
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
     output $display0
-    tray_output $display0
+    tray_output primary
     position bottom
     workspace_buttons yes
-    #status_command i3status --config ~/.i3/status.conf
-    status_command py3status --config ~/.i3/status.conf
+    status_command i3blocks -c ~/.i3/i3blocks.conf
+
     font pango:DejaVu Sans Mono 10
     mode dock
     colors {
@@ -291,11 +317,10 @@ bar {
 }
 bar {
     output $display1
-    tray_output $display1
+    tray_output primary
     position bottom
     workspace_buttons yes
-    #status_command i3status --config ~/.i3/status.conf
-    status_command py3status --config ~/.i3/status.conf
+    status_command i3blocks -c ~/.i3/i3blocks.conf
     font pango:DejaVu Sans Mono 10
     colors {
         background #000000
@@ -306,11 +331,10 @@ bar {
 }
 bar {
     output $display2
-    tray_output $display2
+    tray_output primary
     position bottom
-    workspace_buttons no
-    #status_command i3status --config ~/.i3/status.conf
-    status_command py3status --config ~/.i3/status.conf
+    workspace_buttons yes
+    status_command i3blocks -c ~/.i3/i3blocks.conf
     font pango:DejaVu Sans Mono 10
     colors {
         background #000000
@@ -328,57 +352,59 @@ client.unfocused		#000000	#333333		#FFFFFF
 client.urgent			#FF0000	#FF0000		#FF0000
 
 # application settings
-assign [instance="Gnome-terminal"] 1
-assign [instance="google-chrome"] 2
-assign [instance="Thunderbird"] 3
-assign [instance="Pidgin"] 4
-assign [instance="Telegram"] 5
-assign [instance="Turpial"] 6
+assign [instance="Gnome-terminal"] → 1
+assign [instance="Thunderbird"]    → 2
+assign [instance="google-chrome"]  → 3
+assign [instance="chromium.*$"]    → 3
+assign [instance="Pidgin"]         → 4
+assign [instance="Telegram"]       → 5
+assign [instance="CoreBird"]       → 6
+assign [instance="HipChat"]        → 7
+assign [instance="Slack"]          → 8
 
-for_window [class="Thunar" instance="file_progress"] floating enable
-for_window [window_role="pop-up"]		floating enable
-for_window [class="File-roller"]		floating enable, border normal
-for_window [class="Pidgin"]			floating enable, border normal
-for_window [class="Linphone"]			floating enable, border normal
-for_window [class="Sflphone"]			floating enable, border normal
-for_window [class="Clementine"]			floating enable, border normal
-for_window [class="Skype"]			floating enable, border normal
-for_window [class="Hipchat"]			floating enable, border normal
-for_window [class="remote-viewer"]		floating enable, border normal
-for_window [class="sun-awt-X11-XFramePeer"]	floating enable, border normal
+for_window [class="Thunar" instance="file_progress"]		floating enable
+for_window [window_role="pop-up"]				floating enable
+for_window [class="File-roller"]				floating enable, border normal
+for_window [class="Pidgin"]					floating enable, border normal
+for_window [class="Clementine"]					floating enable, border normal
+for_window [class="Skype"]					floating enable, border normal
+for_window [class="hipchat"]					floating enable, border normal
+for_window [class="Slack"]					floating enable, border normal
+for_window [class="Keepassx" window_type="Dialog"] focus;	floating enable, border normal
+for_window [class="Keepassx"]					floating enable, border normal
+for_window [class="PasswordSafe"]				floating enable, border normal
+for_window [class="remote-viewer"]				floating enable, border normal
+for_window [class="GitKraken"]					floating enable, border normal
+for_window [class="pcmanfm"]					floating enable, border normal
+for_window [class="sun-awt-X11-XFramePeer"]			floating enable, border normal
+for_window [class="SIDN-DESKTOP"]				floating enable, border normal
+for_window [class="SIDN-DESKTOP "]				floating enable, border normal
+for_window [class="MPlayer"]					floating enable
+for_window [instance="gimp"]					floating enable
 
-# start applications (Start with dimming the volume)
-exec --no-startup-id /bin/amixer -D pulse sset Master '15%'
-exec --no-startup-id /bin/nm-applet
-exec --no-startup-id /usr/bin/xscreensaver
-exec --no-startup-id /bin/dunst -config ~/.i3/dunstrc
-exec --no-startup-id /bin/xsetroot -solid "#000000"
-exec --no-startup-id /bin/xset -b
-exec --no-startup-id /bin/feh --bg-fill ~/Pictures/dark-floral.jpg
-exec --no-startup-id /bin/conky -qc ~/.i3/conky.conf
+# start applications (Start with dimming the volumes)
+exec --no-startup-id /usr/bin/amixer -c $acard sset Master '15%' on
+exec --no-startup-id /usr/bin/amixer -c $acard sset Capture '15%' off
+## exec --no-startup-id ~/.i3/bin/ponymix -c $acard set-volume 15
+## exec --no-startup-id ~/.i3/bin/ponymix -c $acard --source set-volume 0
+#
+exec --no-startup-id /usr/bin/nm-applet
+exec --no-startup-id /usr/bin/xautolock -time 5 -locker '/usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"'
+exec --no-startup-id /usr/bin/dunst -config ~/.i3/dunstrc
+exec --no-startup-id /usr/bin/xsetroot -solid "#010101"
+exec --no-startup-id /usr/bin/xset -b
+exec --no-startup-id /usr/bin/feh --bg-fill ~/.i3/Pictures/floral_dark.jpg
+## exec --no-startup-id /usr/bin/conky -qc ~/.i3/conky.conf
 exec --no-startup-id i3-msg 'workspace 1;'
 
 # Restore GNOME's settings
-exec --no-startup-id /usr/libexec/gnome-settings-daemon-localeexec
-exec --no-startup-id /bin/gnome-keyring-daemon
+# exec --no-startup-id /usr/libexec/gnome-settings-daemon-localeexec
+exec --no-startup-id /usr/bin/gnome-keyring-daemon
 
 # Sound for Pulse
-exec --no-startup-id /usr/bin/pulseaudio --start
-exec --no-startup-id /bin/volumeicon
+# exec --no-startup-id /usr/bin/pulseaudio --start
 #
 #
 # Fix a bug in gnome-settings-daemon: http://feeding.cloud.geek.nz/posts/creating-a-modern-tiling-desktop-environment-using-i3/
-exec --no-startup-id dconf write /org/gnome/settings-daemon/plugins/cursor/active false
-
-# Shutdown, Reboot, Lock Screen, and Logout #657b83
-set $sysmenu "system:  [P]oweroff  re[B]oot  [L]ock  logou[T] "
-bindsym $mod+Shift+Return      mode $sysmenu
-mode $sysmenu {
-    bindsym p         exec shutdown -P now
-    bindsym b         exec shutdown -r now
-    bindsym l         exec /usr/bin/xscreensaver-command -lock
-    bindsym t         exec --no-startup-id i3-msg exit, mode "default"
-    bindsym Return    mode "default"
-    bindsym Escape    mode "default"
-}
+# exec --no-startup-id dconf write /org/gnome/settings-daemon/plugins/cursor/active false
 #--------------------------------------------------------------------------------

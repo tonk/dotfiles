@@ -1,0 +1,680 @@
+#!/bin/bash
+# vim: noexpandtab
+# rerandr3 - Bash multimonitor handler daemon
+# by Vladimir Kudrya
+# https://github.com/Vladimir-csp/
+#
+# This script is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version. See <http://www.gnu.org/licenses/>.
+
+# for help see show_help function or run rerandr3 help
+
+# hook trigger boundary in pixel quantity (width*height)
+# 1920 * 1080 = 2073600
+PIXEL_TRIGGER=2073600
+
+# which strategy to use when autostacking
+# (xrandr relative position options: --right-of, --left-of, --above, --below)
+STACK_STRATEGY="--left-of"
+
+SOCKET="/tmp/rerandr3.fifo"
+DAEMON_LOG="$HOME/.rerandr3.log"
+UDEV_RULE_FILE="/etc/udev/rules.d/95-rerandr3-monitor-trigger.rules"
+UDEV_RULE="KERNEL==\"card0\", SUBSYSTEM==\"drm\",  RUN+=\"$(readlink -f "$0") trigger-restore\""
+
+# Name of X process, needed for some checks
+XORG_PROCESS=Xorg
+
+# check for needed tools
+BINFAIL=0
+for BINARY in xrandr xxd sed tr xdpyinfo
+do
+	which $BINARY >/dev/null || { echo "$BINARY binary not found!" >&2 ; BINFAIL=1 ;}
+done
+[ "$BINFAIL" = "1" ] && exit 1 || true
+unset BINFAIL
+
+show_help(){
+	cat << "EOF"
+syntax:
+
+	rerandr command
+
+where command is one of:
+
+	save - save current uniqe monitor setup based on output names and
+	monitor models from EDID data.
+
+	restore - if current monitor setup is known, apply stored config.
+	If setup is unknown, try to disable everything disconnected and
+	enable and stack everything connected.
+
+	show - dump setup ID and xrandr arguments of current state.
+
+	showx - dump information to be set in Xresources
+
+	savex - save information in Xresources
+
+	daemon - launch user session daemon for automatic triggering.
+
+	trigger-save - tell daemon to do save.
+
+	trigger-restore - tell daemon to restore configuration.
+
+	hooks - just apply screen hooks
+
+	insert-udev - insert udev rule for auto triggering.
+
+to use rerandr3 in 'full auto', create udev rule:
+
+	KERNEL=="card0", SUBSYSTEM=="drm", RUN+="/full/path/to/rerandr3 trigger-restore"
+
+EOF
+}
+
+##############################################
+#### window hooks
+##############################################
+
+hooks() {
+	# do things on every switch
+	echo "Applying general hooks."
+	#wp-random
+	#nitrogen --restore
+	#killall -USR1 conky
+}
+
+smallhooks() {
+	# do things if screen area is less than $PIXEL_TRIGGER
+	echo "Applying small screen hooks."
+	#wmctrl -xr Iceweasel	-b "add,maximized_horz,maximized_vert"
+	#wmctrl -xr Icedove		-b "add,maximized_horz,maximized_vert"
+	#wmctrl -xr Spacefm		-b "add,maximized_horz,maximized_vert"
+}
+
+largehooks() {
+	# do things if screen area is greater than $PIXEL_TRIGGER
+	echo "Applying large screen hooks."
+	#wmctrl -xr Iceweasel	-b "remove,maximized_vert,maximized_horz"
+	#wmctrl -xr Icedove	-b "remove,maximized_vert,maximized_horz"
+	#wmctrl -xr Spacefm	-b "remove,maximized_vert,maximized_horz"
+	#wmctrl -xr Iceweasel	-e "0,-1,-1,1280,$HEIGHT"
+	#wmctrl -xr Icedove	-e "0,-1,-1,1280,$HEIGHT"
+	#wmctrl -xr Spacefm	-e "0,-1,-1,1280,$HEIGHT"
+}
+
+applyhooks() {
+	# skip if run by root (DM, etc)
+	[ "$UID" = "0" ] && return 0
+
+	# calculate dimensions and apply hooks
+	DIMENSIONS="$(xdpyinfo | grep dimensions | grep -o '[0-9]\+x[0-9]\+' | head -n 1)"
+	WIDTH="$(echo "$DIMENSIONS" | cut -d x -f 1)"
+	HEIGHT="$(echo "$DIMENSIONS" | cut -d x -f 2)"
+	PIXELS="$(( $WIDTH * $HEIGHT ))"
+	echo "Pixel quantity: $PIXELS"
+	if [ "$PIXELS" -gt "$PIXEL_TRIGGER" ] ; then
+		hooks
+		largehooks
+	else
+		hooks
+		smallhooks
+	fi
+	# hooks must not fail
+	true
+}
+
+prepare_confdir(){
+	if [ -n "$XDG_CONFIG_HOME" ]
+	then
+		CONF_DIR="$XDG_CONFIG_HOME/rerandr3"
+	else
+		CONF_DIR="$HOME/.config/rerandr3"
+	fi
+	mkdir -p "$CONF_DIR"
+
+	[ -d "$CONF_DIR" -a -w "$CONF_DIR" ] || { echo "Could not access config directory \"$CONF_DIR\"!" >&2 ; exit 1 ;}
+}
+
+prepare_pipe(){
+	[ ! -p "$SOCKET" ] && mkfifo -m 666 "$SOCKET"
+	[ "$(stat -c %a "$SOCKET")" != "666" ] && chmod 666 "$SOCKET"
+	[ ! -p "$SOCKET" -a "$(stat -c %a "$SOCKET")" != "666" ] && { echo "Could not prepare named pipe \"$SOCKET\"!" >&2 ; exit 1 ;}
+}
+
+get_data(){
+	# parsing verbose xrandr output
+	OUTPUT_NUM=-1
+	unset OUTPUT STATUS ROLE POSITION POSITION_X POSITION_Y CRTC MODEL SERIAL MODE_CURRENT MODE_PREFERRED EDID EDID_CATCH RANDR ROTATION REFLECTION GAMMA BRIGHTNESS TRANSFORM
+	OIFS=$IFS
+	echo "Gathering data..."
+	IFS=
+	while read LINE ; do
+		# get output name and status
+		# triggered by and connection status keyword and lack of indent.
+		if echo "$LINE" | grep -q '^[[:alnum:]_-]\+[[:space:]]\+\(connected\|disconnected\)'
+		then
+			# found new output
+			OUTPUT_NUM=$(( $OUTPUT_NUM + 1 ))
+			# get name, first non-whitespace block
+			OUTPUT[$OUTPUT_NUM]="$(echo -n "$LINE" | grep -o '^[^[:space:]]\+')"
+			# get status by keyword
+			STATUS[$OUTPUT_NUM]="$(echo -n "$LINE" | grep -ow 'connected\|disconnected')"
+			# check if primary
+			ROLE[$OUTPUT_NUM]="$(echo -n "$LINE" | grep -ow 'primary')"
+			# get mode (XxY string)
+			MODE_CURRENT[$OUTPUT_NUM]="$(echo -n "$LINE" | grep -o '[0-9]\+x[0-9]\+[+-][0-9]\+[+-][0-9]\+' | grep -o '[0-9]\+x[0-9]\+')"
+			# everything else is irrelevant if output is disconnected
+			if [ "${STATUS[$OUTPUT_NUM]}" = "connected" ]
+			then
+				# get position (+X+Y string and each component)
+				POSITION[$OUTPUT_NUM]="$(echo -n "$LINE" | grep -o '[0-9]\+x[0-9]\+[+-][0-9]\+[+-][0-9]\+' | grep -o '[+-][0-9]\+[+-][0-9]\+')"
+				POSITION_X[$OUTPUT_NUM]="$(echo -n ${POSITION[$OUTPUT_NUM]} | grep -o '[+-][0-9]\+' | head -n 1)"
+				POSITION_Y[$OUTPUT_NUM]="$(echo -n ${POSITION[$OUTPUT_NUM]} | grep -o '[+-][0-9]\+' | tail -n 1)"
+				# active reflect and rotation settings are between ") ... ("
+				RANDR[$OUTPUT_NUM]="${LINE#*)}"
+				RANDR[$OUTPUT_NUM]="${RANDR[$OUTPUT_NUM]%%(*}"
+				# get rotation by keyword
+				ROTATION[$OUTPUT_NUM]="$(echo -n "${RANDR[$OUTPUT_NUM]}" | grep -o 'normal\|right\|inverted|\left')"
+				# words 'x' and 'y' represent reflection, may vary in case
+				# conditionally compose proper value for --reflect
+				echo -n "${RANDR[$OUTPUT_NUM]}" | grep -qiw 'x' && REFLECTION[$OUTPUT_NUM]="x"
+				echo -n "${RANDR[$OUTPUT_NUM]}" | grep -qiw 'y' && REFLECTION[$OUTPUT_NUM]="${REFLECTION[$OUTPUT_NUM]}y"
+				[ -z "${REFLECTION[$OUTPUT_NUM]}" ] && REFLECTION[$OUTPUT_NUM]="normal"
+			fi
+			# done with this line
+			continue
+		fi
+
+		# get CRTC
+		# using crtc in saved configs works around xrandr position restore bug... theoretically
+		# update: it does not, but messes things up when trying to shuffle CRTCs around enabled outputs
+		if echo "$LINE" | grep -q '^[[:space:]]\+CRTC:'
+		then
+			CRTC[$OUTPUT_NUM]="$(echo "$LINE" | grep -o '[0-9]\+')"
+			# done with this line
+			continue
+		fi
+
+		# trigger EDID catching
+		if echo "$LINE" | grep -q '^[[:space:]]\+EDID:'
+		then
+			EDID_CATCH=1
+			# done with this line, data comes next
+			continue
+		fi
+
+		# catch and combine EDID string
+		if [ "$EDID_CATCH" = "1" ]
+		then
+			# capture while line contains only hexadecimal string
+			if echo "$LINE" | grep -q '^[[:space:]]\+[[:xdigit:]]\+$'
+			then
+				EDID[$OUTPUT_NUM]="${EDID[$OUTPUT_NUM]}$(echo -n "$LINE" | grep -o '[[:xdigit:]]\+')"
+				# get next line
+				continue
+			else
+				# edid string is over
+				unset EDID_CATCH
+				# extract data. Mad skillz in voodoo magic are used here.
+				EDID[$OUTPUT_NUM]=$(echo ${EDID[$OUTPUT_NUM]} | fold -w2 | paste -sd\ )
+				MODEL[$OUTPUT_NUM]="${EDID[$OUTPUT_NUM]##*fc}"
+				MODEL[$OUTPUT_NUM]="${MODEL[$OUTPUT_NUM]%%0a*}"
+				MODEL[$OUTPUT_NUM]="$(echo ${MODEL[$OUTPUT_NUM]} | xxd -r -p | tr -cd '\11\12\15\40-\176' | sed 's/[^a-zA-Z0-9_[:space:]-]//g;s/^[[:space:]]\+\|[[:space:]]\+$//g;s/[[:space:]]\+/_/g')"
+				SERIAL[$OUTPUT_NUM]="${EDID[$OUTPUT_NUM]##*ff}"
+				SERIAL[$OUTPUT_NUM]="${SERIAL[$OUTPUT_NUM]%%0a*}"
+				SERIAL[$OUTPUT_NUM]="$(echo ${SERIAL[$OUTPUT_NUM]} | xxd -r -p | tr -cd '\11\12\15\40-\176' | sed 's/[^a-zA-Z0-9_[:space:]-]//g;s/^[[:space:]]\+\|[[:space:]]\+$//g;s/[[:space:]]\+/_/g')"
+
+				# do not skip line here, it may contain other data
+			fi
+		fi
+
+		# trigger transformation catching
+		if echo "$LINE" | grep -q '^[[:space:]]\+Transform:'
+		then
+			TRANSFORM_CATCH=1
+			# remove header
+			LINE="${LINE#*:}"
+			# do not skip, data already begins on the same line
+		fi
+
+		# catch and combine transformation data
+		if [ "$TRANSFORM_CATCH" = "1" ]
+		then
+			# capture while line contains only digits and spaces
+			if echo "$LINE" | grep -q '^[[:space:]]\+[0-9\.[:space:]-]\+$'
+			then
+				# we need all the figures separated by commas in one line
+				[ -n "${TRANSFORM[$OUTPUT_NUM]}" ] && FORMATTER=',' || unset FORMATTER
+				TRANSFORM[$OUTPUT_NUM]="${TRANSFORM[$OUTPUT_NUM]}${FORMATTER}$(echo -n "$LINE" | sed 's/[^0-9\.[:space:]-]//g;s/^[[:space:]]\+\|[[:space:]]\+$//g;s/[[:space:]]\+/,/g')"
+				# get next line
+				continue
+			else
+				# transform data is over
+				unset TRANSFORM_CATCH
+				# do not skip cycle here, we are not on transform line any more
+			fi
+		fi
+
+		# get gamma and brightness
+		echo "$LINE" | grep -q '^[[:space:]]\+Gamma:' && GAMMA[$OUTPUT_NUM]="$(echo $LINE | sed 's/^[[:space:]]\+Gamma:[[:space:]]*//')"
+		echo "$LINE" | grep -q '^[[:space:]]\+Brightness:' && BRIGHTNESS[$OUTPUT_NUM]="$(echo $LINE | sed 's/^[[:space:]]\+Brightness:[[:space:]]*//')"
+
+		# get preferred mode
+		if echo "$LINE" | grep -q '^[[:space:]]\+[0-9]\+x[0-9]\+'
+		then
+			# get by +preferred keyword
+			if echo "$LINE" | grep -q '\+preferred'
+			then
+				MODE_PREFERRED[$OUTPUT_NUM]="$(echo "$LINE" | grep -o '[0-9]\+x[0-9]\+')"
+			fi
+			continue
+		fi
+	done < <(xrandr --verbose)
+	IFS=$OIFS
+
+	# get DPI value
+	DPI="$(xdpyinfo | grep 'resolution:' | grep -o '[0-9]\+x[0-9]\+')"
+	# get framebuffer size
+	DIMENSIONS="$(xdpyinfo | grep dimensions | grep -o '[0-9]\+x[0-9]\+' | head -n 1)"
+}
+
+dump_args(){
+	# echo current screen config formatted in xrandr cli arguments
+	for OUTPUT_NUM in ${!OUTPUT[@]}
+	do
+		echo -n "--output ${OUTPUT[$OUTPUT_NUM]} "
+		if [ -z "${MODE_CURRENT[$OUTPUT_NUM]}" ]
+		then
+			echo -n "--off "
+		else
+			echo -n "--mode ${MODE_CURRENT[$OUTPUT_NUM]} --pos ${POSITION_X[$OUTPUT_NUM]}x${POSITION_Y[$OUTPUT_NUM]} "
+			[ -n "${ROTATION[$OUTPUT_NUM]}" ] && echo -n "--rotate ${ROTATION[$OUTPUT_NUM]} "
+			[ -n "${REFLECTION[$OUTPUT_NUM]}" ] && echo -n "--reflect ${REFLECTION[$OUTPUT_NUM]} "
+			# disable CRTC saving, serves no real purpose, but breaks things sometimes.
+			#[ -n "${CRTC[$OUTPUT_NUM]}" ] && echo -n "--crtc ${CRTC[$OUTPUT_NUM]} "
+			[ -n "${GAMMA[$OUTPUT_NUM]}" ] && echo -n "--gamma ${GAMMA[$OUTPUT_NUM]} "
+			[ -n "${BRIGHTNESS[$OUTPUT_NUM]}" ] && echo -n "--brightness ${BRIGHTNESS[$OUTPUT_NUM]} "
+			[ -n "${TRANSFORM[$OUTPUT_NUM]}" ] && echo -n "--transform ${TRANSFORM[$OUTPUT_NUM]} "
+			[ "${ROLE[$OUTPUT_NUM]}" = "primary" ] && echo -n "--primary "
+		fi
+	done
+	echo -n "--dpi $DPI"
+}
+
+dump_xresources_i3(){
+	# echo screen information to fill in ~/.Xresources.d/i3
+	OUTPUT_IDX=0
+	for OUTPUT_NUM in ${!OUTPUT[@]}
+	do
+		# if output is enabled
+		if [ ! -z "${MODE_CURRENT[$OUTPUT_NUM]}" ]
+		then
+			echo "i3.output.${OUTPUT[$OUTPUT_NUM]}: ${MODE_CURRENT[$OUTPUT_NUM]}${POSITION_X[$OUTPUT_NUM]}x${POSITION_Y[$OUTPUT_NUM]}"
+			if [ "${ROLE[$OUTPUT_NUM]}" = "primary" ]
+			then # one primary with index 0
+				echo "i3.output.0: ${OUTPUT[$OUTPUT_NUM]}"
+				echo "i3.output.primary: ${OUTPUT[$OUTPUT_NUM]}"
+			else # secondaries with index 1 and more, index 1 is 'secondary'
+				OUTPUT_IDX=$(( $OUTPUT_NUM + 1 ))
+				echo "i3.output.${OUTPUT_IDX}: ${OUTPUT[$OUTPUT_NUM]}"
+				if [ $OUTPUT_IDX -eq 1 ]
+				then
+					echo "i3.output.secondary: ${OUTPUT[$OUTPUT_NUM]}"
+				fi
+			fi
+		fi
+	done | sort
+}
+
+show_xresource() {
+	resource=$1
+	echo "! ~/.Xresources.d/"${resource}
+	echo
+	echo "! Make sure to include this file from ~/.Xresources by adding"
+	echo "! #include \"~/.Xresources.d/${resource}\""
+	echo
+	echo "! output index 0 is the primary monitor, hence i3.output.0 == i3.output.primary"
+	echo "! output index 1 is the first secondary monitor, hence i3.output.1 == i3.output.secondary"
+	echo
+	dump_xresources_${resource}
+	echo
+}
+
+save_xresources(){
+	resource=$1
+	mkdir -p ~/.Xresources.d
+	echo Saving ~/.Xresources.d/${resource}
+	echo
+	show_xresource ${resource} | tee ~/.Xresources.d/${resource} | sed 's/^/  /'
+}
+
+dump_xresources() {
+	action=$1
+	for resource in i3
+	do
+		case "$action" in
+			"show")
+				show_xresource ${resource}
+				;;
+			"save")
+				save_xresources ${resource}
+				;;
+		esac
+	done
+	if [ "$action" = "save" ]
+	then
+		echo
+		echo Reloading X server resource database utility
+		xrdb -I$HOME ~/.Xresources
+		echo Restarting i3
+		i3-msg restart
+	fi
+}
+
+dump_id(){
+	# generate and echo setup ID based on output names, display models and serial numbers
+	FORMATTER=
+	for OUTPUT_NUM in ${!OUTPUT[@]}
+	do
+		if [ "${STATUS[$OUTPUT_NUM]}" = "connected" ]
+		then
+			[ -n "$FORMATTER" ] && echo -n '-'
+			FORMATTER=1
+			echo -n "${OUTPUT[$OUTPUT_NUM]}"
+			[ -n "${MODEL[$OUTPUT_NUM]}" ] && echo -n "-${MODEL[$OUTPUT_NUM]}"
+			# do not output serial number, makes setups more portable
+			#[ -n "${SERIAL[$OUTPUT_NUM]}" ] && echo -n "-${SERIAL[$OUTPUT_NUM]}"
+		fi
+	done
+}
+
+save_setup(){
+	SETUP_ID=$(dump_id)
+	SETUP_ARGS=$(dump_args)
+	echo "Saving configuration for setup \"${SETUP_ID}\"..."
+	echo "$SETUP_ARGS" > "$CONF_DIR/${SETUP_ID}.rerandr"
+}
+
+show_setup(){
+	SETUP_ID=$(dump_id)
+	SETUP_ARGS=$(dump_args)
+	echo "${SETUP_ID}"
+	echo "$SETUP_ARGS"
+}
+
+apply_saved(){
+	# read from config file, strip everything but injection-safe characters
+	SAVED_SETUP_ARGS="$(cat "$CONF_DIR/${SETUP_ID}.rerandr" | sed 's/[^[:alnum:][:space:]\.,:_+-]//g')"
+	if [ "$SETUP_ARGS" = "$SAVED_SETUP_ARGS" ]
+	then
+		echo "Nothing to do."
+	else
+		# first disable everything unneeded, this works around xrandr CRTC allocation bug
+		# preserve framebuffer size to preserve window positions
+		unset DISABLE_ARGS
+		for OUTPUT_NUM in ${!OUTPUT[@]}
+		do
+			if [ -n "${MODE_CURRENT[$OUTPUT_NUM]}" ] && echo "$SAVED_SETUP_ARGS" | grep -q "\--output ${OUTPUT[$OUTPUT_NUM]} --off"
+			then
+				echo "Disabling unneeded output ${OUTPUT[$OUTPUT_NUM]}"
+				DISABLE_ARGS="$DISABLE_ARGS --output ${OUTPUT[$OUTPUT_NUM]} --off"
+			fi
+		done
+		[ -n "$DISABLE_ARGS" ] && xrandr --fb "$DIMENSIONS" $DISABLE_ARGS
+
+		# apply saved config
+		xrandr $SAVED_SETUP_ARGS
+		if [ "$?" = "0" ]
+		then
+			# if applied successfully, go to hooks.
+			applyhooks
+		else
+			# if something wend wrong, go through auto routine
+			echo "Failed to apply saved configuration, trying auto..."
+			apply_auto
+		fi
+	fi
+}
+
+apply_auto(){
+	# autostacking
+	# first disable disconnected outputs preserving framebuffer size
+	# mark active and primary outputs in the process
+	unset PRIMARY_NUM DISABLE_ARGS ACTIVE_NUMS ENABLE_NUMS LAST_ENABLED
+	for OUTPUT_NUM in ${!OUTPUT[@]}
+	do
+		if [ "${STATUS[$OUTPUT_NUM]}" = "disconnected" -a -n "${MODE_CURRENT[$OUTPUT_NUM]}" ]
+		then
+			echo "Disabling disconnected output \"${OUTPUT[$OUTPUT_NUM]}\"..."
+			DISABLE_ARGS="$DISABLE_ARGS --output ${OUTPUT[$OUTPUT_NUM]} --off"
+			# clear mode for output to be disabled
+			MODE_CURRENT[$OUTPUT_NUM]=
+		elif [ "${STATUS[$OUTPUT_NUM]}" = "connected" -a -n "${MODE_CURRENT[$OUTPUT_NUM]}" -a "${ROLE[$OUTPUT_NUM]}" = "primary" ]
+		then
+			echo "found connected and active primary output ${OUTPUT[$OUTPUT_NUM]}"
+			PRIMARY_NUM=$OUTPUT_NUM
+			# collect active outputs
+			ACTIVE_NUMS=( "${ACTIVE_NUMS[@]}" "$OUTPUT_NUM" )
+		elif [ "${STATUS[$OUTPUT_NUM]}" = "connected" -a -n "${MODE_CURRENT[$OUTPUT_NUM]}" ]
+		then
+			# collect active outputs
+			ACTIVE_NUMS=( "${ACTIVE_NUMS[@]}" "$OUTPUT_NUM" )
+		elif [ "${STATUS[$OUTPUT_NUM]}" = "connected" -a -z "${MODE_CURRENT[$OUTPUT_NUM]}" ]
+		then
+			# collect inactive outputs to be enabled
+			ENABLE_NUMS=( "${ENABLE_NUMS[@]}" "$OUTPUT_NUM" )
+		fi
+	done
+	# apply disabing outputs
+	[ -n "$DISABLE_ARGS" ] && xrandr --fb "$DIMENSIONS" $DISABLE_ARGS
+
+	# if there is no active primary, make one from first active or whatever
+	if [ -z "$PRIMARY_NUM" -a -n "${ACTIVE_NUMS[*]}" ]
+	then
+		echo "Making output ${OUTPUT[${ACTIVE_NUMS[0]}]} primary"
+		xrandr --fb "$DIMENSIONS" --output "${OUTPUT[${ACTIVE_NUMS[0]}]}" --auto --primary
+		PRIMARY_NUM="${ACTIVE_NUMS[0]}"
+	elif [ -z "$PRIMARY_NUM" -a -z "${ACTIVE_NUMS[*]}" ]
+	then
+		echo "Enabling output ${OUTPUT[${ENABLE_NUMS[0]}]} as primary"
+		xrandr --fb "$DIMENSIONS" --output ${OUTPUT[${ENABLE_NUMS[0]}]} --auto --primary
+		ACTIVE_NUMS=( "${ENABLE_NUMS[0]}" "${ACTIVE_NUMS[@]}" )
+		ENABLE_NUMS[0]=
+	fi
+
+	# start enabling and stacking outputs
+	# enable sequential, single command will fail when we run out of CRTCs.
+	LAST_NUM="$PRIMARY_NUM"
+	for OUTPUT_NUM in ${ACTIVE_NUMS[@]} ${ENABLE_NUMS[@]}
+	do
+		if [ "$OUTPUT_NUM" != "$PRIMARY_NUM" ]
+		then
+			echo  "Putting ouptut ${OUTPUT[$OUTPUT_NUM]} next to ${OUTPUT[$LAST_NUM]}"
+			xrandr --output "${OUTPUT[$OUTPUT_NUM]}" --auto "$STACK_STRATEGY" "${OUTPUT[$LAST_NUM]}"
+			LAST_NUM="$OUTPUT_NUM"
+		fi
+	done
+	# in case framebuffer is still not updated to current config
+	xrandr --auto
+
+	applyhooks
+}
+
+
+apply_setup(){
+	# get data
+	SETUP_ID=$(dump_id)
+	SETUP_ARGS=$(dump_args)
+
+	# decide if restore saved or go with auto
+	if [ -r "$CONF_DIR/${SETUP_ID}.rerandr" ]
+	then
+		echo "Applying configuration for setup \"${SETUP_ID}\"..."
+		apply_saved
+	else
+		echo "No configuration found for setup \"${SETUP_ID}\"."
+		apply_auto
+	fi
+}
+
+getsessionpid(){
+	# got this from fbpanel xlogout script, refined.
+	# find PID of session manager process to exit when it no longer exists
+
+	# get display number
+	DPY=${DISPLAY#*\:}
+	DPY=${DPY%%\.*}
+
+	# get X pid
+	XPID=$(cat "/tmp/.X${DPY}-lock" | grep -o '[0-9]\+')
+
+	# get pid of xdm (or gdm, kdm, simple xinitrc, etc). usually it's parent of X
+	XDMPID=$(ps -o ppid --no-headers --pid=$XPID)
+
+	# recursivly find child of xdm that was started in home dir -
+	# it's user's session start up script
+		pid_scan(){
+			unset XDMCHILDREN
+			while [ $# != 0 ]; do
+				XDMCHILDREN="$XDMCHILDREN $(ps --no-headers -o pid --ppid=$1)"
+				shift
+			done
+			for pid in $XDMCHILDREN; do
+				if cwd=$(ls -al /proc/$pid/cwd 2>/dev/null); then
+					cwd=`sed 's/.*-> //' <<< $cwd`
+					[ "$cwd" = "$HOME" ] && echo $pid && return
+				fi
+			done
+			pids=$XDMCHILDREN
+			[ -n "$pids" ] && pid_scan $XDMCHILDREN;
+
+		}
+
+	SESSIONPID=`pid_scan $XDMPID`
+
+	[ -z "$SESSIONPID" ] && echo "No session parent found" >&2 && false
+	[ -n "$SESSIONPID" ] && echo $SESSIONPID
+}
+
+check_udev(){
+	[ ! "$(cat "$UDEV_RULE_FILE" 2>/dev/null)" = "$UDEV_RULE" ] && echo -e "Info:\trerandr3 udev rule \"$UDEV_RULE_FILE\" is missing or invalid.\n\tAutomatic triggering is not possible.\n\tRun \"$(basename "$0") insert-udev\" to insert rule."
+}
+
+insert_udev(){
+	if [ "$UID" = "0" ]
+	then
+		echo "$UDEV_RULE" > "$UDEV_RULE_FILE"
+		udevadm control --reload
+	else
+		echo "You are not root. Can not insert udev rule" >&2
+		exit 1
+	fi
+}
+
+if [ "$1" = "help" -o "$1" = "--help" -o "$1" = "-h" ]
+then
+	show_help
+elif [ "$1" = "save" ]
+then
+	prepare_confdir
+	get_data
+	save_setup
+elif [ "$1" = "restore" ]
+then
+	prepare_confdir
+	get_data
+	apply_setup
+	get_data
+	dump_xresources save
+elif [ "$1" = "show" ]
+then
+	prepare_confdir
+	get_data
+	show_setup
+elif [ "$1" = "showx" ]
+then
+	prepare_confdir
+	get_data
+	dump_xresources show
+elif [ "$1" = "savex" ]
+then
+	get_data
+	dump_xresources save
+elif [ "$1" = "trigger-save" ]
+then
+	[ -p "$SOCKET" -a "$(stat -c %a "$SOCKET")" = "666" ] && echo save > "$SOCKET"
+	true
+elif [ "$1" = "trigger-restore" ]
+then
+	# if there is no Xorg running, exit (workaround for messing with boot via udev rule)
+	ps -C "$XORG_PROCESS" >/dev/null 2>/dev/null || exit 0
+	[ -p "$SOCKET" -a "$(stat -c %a "$SOCKET")" = "666" ] && echo restore > "$SOCKET"
+	true
+elif [ "$1" = "daemon" ]
+then
+	prepare_pipe 2>&1 | tee -a "$DAEMON_LOG"
+	check_udev | tee -a "$DAEMON_LOG"
+
+	# clean pipes
+	cat /dev/null > "$SOCKET" &
+	cat "$SOCKET" | head -c 128 > /dev/null
+
+	"$0" restore 2>&1 | tee -a "$DAEMON_LOG"
+
+	# session tracking
+	getsessionpid
+	MAINPID="$$"
+	echo -e "Started daemon. PID: $MAINPID\nTracking session leader: PID $SESSIONPID" | tee -a "$DAEMON_LOG"
+	while true
+	do
+		kill -0 $SESSIONPID 2> /dev/null || { echo exit > "$SOCKET" ; exit 0 ; }
+		kill -0 $MAINPID 2> /dev/null || exit 0
+		sleep 3s
+	done &
+
+
+	while true
+	do
+		echo "Waiting for socket trigger..."
+		ACTION="$(cat "$SOCKET" | head -c 8 | sed 's/[^[:alpha:]_-]//g')"
+		if [ "$ACTION" = "save" ]
+		then
+			"$0" save
+			ACTION=
+		elif [ "$ACTION" = "restore" ]
+		then
+			"$0" restore
+			ACTION=
+		elif [ "$ACTION" = "exit" ]
+		then
+			echo "Exiting..."
+			exit 0
+		else
+			echo "Unknown action \"$ACTION\"."
+			ACTION=
+			sleep 5s
+		fi
+	done 2>&1 | tee -a "$DAEMON_LOG"
+elif [	"$1" = "hooks" ]
+then
+	applyhooks
+elif [ "$1" = "insert-udev" ]
+then
+	echo "Will now insert udev rule:
+	$UDEV_RULE
+in file:
+	$UDEV_RULE_FILE
+Root access required.
+Press any key to continue, or Ctrl+c to cancel"
+	read -sn1
+	sudo "$0" root-insert-udev
+elif [ "$1" = "root-insert-udev" ]
+then
+	insert_udev
+else
+	show_help
+	exit 1
+fi

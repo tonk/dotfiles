@@ -11,3 +11,4 @@ xrandr					\
 		--mode 1366x768		\
 		--pos 1024x0		\
 		--rotate normal
+xrandr --output eDP1 --primary

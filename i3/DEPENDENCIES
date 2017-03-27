@@ -1,0 +1,23 @@
+i3
+i3status
+i3lock
+i3blocks
+dmenu
+amixer
+dunst
+conky
+scrot
+feh
+xbacklight
+xscreensaver or i3lock
+xautolock
+zenity or rofi (for shutdown menu)
+ponymix		## https://github.com/falconindy/ponymix
+playerctl	## https://github.com/acrisci/playerctl/releases
+
+For `xkb-switch` you need:
+- cmake
+- libxkbfile-dev (Debian) or libxkbfile-devel (Redhat)
+
+For `ponymix` you need:
+- libpulse-dev (Debian) or pulseaudio-libs-devel (Redhat)
