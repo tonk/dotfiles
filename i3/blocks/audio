@@ -1,17 +1,18 @@
 #!/bin/bash
-
-CARD="1"
+CARD="-c1"
+CARD=""
 
 case "${BLOCK_BUTTON}"
 in
-	1) amixer -c${CARD} -q sset Master 2%+		;;
-	2) amixer -c${CARD} -q sset Master toggle	;;
-	3) amixer -c${CARD} -q sset Master 2%-		;;
+	1) amixer ${CARD} -q sset Master 2%+		;;
+	2) amixer ${CARD} -q sset Master toggle	;;
+	3) amixer ${CARD} -q sset Master 2%-		;;
 esac
 
-statusLine=$(amixer -c${CARD} get Master | tail -n 1)
+statusLine=$(amixer ${CARD} get Master | tail -n 1)
 status=$(echo "${statusLine}" | grep -wo "on")
 volume=$(echo "${statusLine}" | awk -F ' ' '{print $4}' | tr -d '[]%')
+volume=$(amixer get Master | tail -n 1 | sed -e 's/^[^\[]*\[//' -e 's/%\].*//')
 
 if [[ "${status}" == "on" ]]
 then

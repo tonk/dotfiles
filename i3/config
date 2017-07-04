@@ -31,29 +31,24 @@ set $acard	1
 #
 # AT laptop
 #
-## set $display0 eDP1
-## set $display1 HDMI2
-## set $display2 DP1
-## set $primary eDP1
+set $display0 eDP-1
+set $display1 HDMI-2
+set $display2 DP-1
+set $primary HDMI-2
 #
-# Customer laptop in Docking
+# Customer laptop
 #
-set $display0 DP2-1
-set $display1 DP2-2
-#set $display2 eDP1
-set $primary DP2-2
-#
-# Customer laptop on the move
-#
-## set $display0 eDP1
-## set $primary eDP1
+## set $display0 DP2-1
+## set $display1 DP2-2
+## #set $display2 eDP-1
+## set $primary DP2-2
 
 # Define $primary as the primary display
 exec --no-startup-id /usr/bin/xrandr --output $primary --primary
 
 # Set font
 #font pango:DejaVu Sans Mono 10
-font pango: M+ 1m, FontAwesome, Ionicons, 11
+font pango: M+ 1m, FontAwesome, Ionicons, 14
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -74,8 +69,8 @@ bindsym $mod+$shift+q kill
 bindsym $alt+F4 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -f -i -sf '#1c1c1c' -sb '#ff8800' -nf '#808080' -nb '#1c1c1c' -fn 'Source Code Pro-12'
-bindsym $mod+m exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -sf '#1c1c1c' -sb '#ff8800' -nf '#808080' -nb '#1c1c1c' -fn 'Source Code Pro-12'"
+bindsym $mod+d exec dmenu_run -f -i -sf '#1c1c1c' -sb '#ff8800' -nf '#f7f7f7' -nb '#007c4c' -fn 'Source Code Pro-14'
+bindsym $mod+m exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -sf '#1c1c1c' -sb '#ff8800' -nf '#f7f7f7' -nb '#007c4c' -fn 'Source Code Pro-14'"
 
 # change focus
 bindsym $mod+j         focus left
@@ -306,7 +301,8 @@ bar {
     workspace_buttons yes
     status_command i3blocks -c ~/.i3/i3blocks.conf
 
-    font pango:DejaVu Sans Mono 10
+    font pango:DejaVu Sans Mono 12
+    #font 'Source Code Pro-12'
     mode dock
     colors {
         background #000000
@@ -321,7 +317,8 @@ bar {
     position bottom
     workspace_buttons yes
     status_command i3blocks -c ~/.i3/i3blocks.conf
-    font pango:DejaVu Sans Mono 10
+    font pango:DejaVu Sans Mono 12
+    #font 'Source Code Pro-12'
     colors {
         background #000000
         separator #ff8800
@@ -335,7 +332,8 @@ bar {
     position bottom
     workspace_buttons yes
     status_command i3blocks -c ~/.i3/i3blocks.conf
-    font pango:DejaVu Sans Mono 10
+    font pango:DejaVu Sans Mono 12
+    #font 'Source Code Pro-12'
     colors {
         background #000000
         separator #ff8800
@@ -353,6 +351,7 @@ client.urgent			#FF0000	#FF0000		#FF0000
 
 # application settings
 assign [instance="Gnome-terminal"] → 1
+assign [instance="Evolution"]      → 2
 assign [instance="Thunderbird"]    → 2
 assign [instance="google-chrome"]  → 3
 assign [instance="chromium.*$"]    → 3
@@ -360,6 +359,7 @@ assign [instance="Pidgin"]         → 4
 assign [instance="Telegram"]       → 5
 assign [instance="CoreBird"]       → 6
 assign [instance="HipChat"]        → 7
+assign [instance="HipChat4"]       → 7
 assign [instance="Slack"]          → 8
 
 for_window [class="Thunar" instance="file_progress"]		floating enable
@@ -368,7 +368,9 @@ for_window [class="File-roller"]				floating enable, border normal
 for_window [class="Pidgin"]					floating enable, border normal
 for_window [class="Clementine"]					floating enable, border normal
 for_window [class="Skype"]					floating enable, border normal
+for_window [class="skypeforlinux"]				floating enable, border normal
 for_window [class="hipchat"]					floating enable, border normal
+for_window [class="hipchat4"]					floating enable, border normal
 for_window [class="Slack"]					floating enable, border normal
 for_window [class="Keepassx" window_type="Dialog"] focus;	floating enable, border normal
 for_window [class="Keepassx"]					floating enable, border normal

@@ -1,14 +1,13 @@
 #!/bin/sh
 xrandr					\
-	--output HDMI1 --off		\
-	--output HDMI2 --off		\
-	--output VIRTUAL1 --off		\
-	--output DP1			\
+	--output HDMI-1 --off		\
+	--output HDMI-2 --off		\
+	--output VIRTUAL-1 --off	\
+	--output DP-1			\
 		--mode 1024x768		\
 		--pos 0x0		\
 		--rotate normal		\
-	--output eDP1			\
+	--output eDP-1			\
 		--mode 1366x768		\
 		--pos 1024x0		\
 		--rotate normal
-xrandr --output eDP1 --primary

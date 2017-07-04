@@ -1,12 +1,14 @@
 #!/bin/bash
 
-i3-msg 'workspace 2; exec /usr/bin/thunderbird'
+# i3-msg 'workspace 2; exec /usr/bin/evolution'
+# i3-msg 'workspace 2; exec /usr/bin/thunderbird'
+i3-msg 'workspace 2; exec /usr/local/bin/thunder'
 sleep 1
 if [[ -x /usr/bin/google-chrome ]]
 then
 	i3-msg 'workspace 3; exec /usr/bin/google-chrome'
 else
-	i3-msg 'workspace 3; exec /usr/bin/chromium-browser'
+	i3-msg 'workspace 3; exec /usr/bin/chromium'
 fi
 sleep 1
 i3-msg 'workspace 4; exec /usr/bin/pidgin'
@@ -15,6 +17,9 @@ i3-msg 'workspace 5; exec /home/tonk/bin/Telegram'
 sleep 1
 i3-msg 'workspace 6; exec /usr/bin/corebird'
 sleep 1
-i3-msg 'workspace 7; exec /usr/bin/slack'
-##sleep 1
-##i3-msg 'workspace 7; exec /usr/bin/hipchat'
+i3-msg 'workspace 7; exec /usr/local/bin/hipchat4'
+sleep 1
+i3-msg 'workspace 8; exec /usr/bin/slack'
+
+cmd=$(grep '/usr/bin/feh' ~/.i3/config | sed 's/exec --no-startup-id //')
+eval ${cmd}

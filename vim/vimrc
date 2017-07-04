@@ -6,17 +6,13 @@
 " To start vim without loading any .vimrc or plugins, use:
 "     vim -u NONE
 "
+set shell=/bin/zsh
 
-" The spell files can be downloaded from the internet.
-" This is where I get them:
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.spl
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/nl.utf-8.sug
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.sug
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/fr.utf-8.spl
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.spl
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/en.utf-8.sug
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.spl
-"    wget http://ftp.stu.edu.tw/vim/runtime/spell/de.utf-8.sug
+" Make sure we are modern and use the one and only encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=utf-8
+
 
 " Use vim settings, rather then vi settings (much better!)
 " This must be first, because it changes other options as a side effect.
@@ -41,7 +37,7 @@ set shiftround						" use multiple of shiftwidth when indenting
 set copyindent						" copy indentation on autoindenting
 set scrolloff=4						" keep 4 lines off the edges of the screen
 set nolist							" do not show the list chars
-set listchars=tab:��,trail:�		" but define how they should appear
+set listchars=tab:»·,trail:·		" but define how they should appear
 "set paste							" start in 'paste' mode
 set noexpandtab						" keep tabs as they are
 set encoding=utf-8					" use utf-8 as default encoding
@@ -54,7 +50,7 @@ set smartcase						" ignore case if search pattern is all lowercase,
 set smarttab						" insert tabs on the start of a line according to sw
 set hlsearch						" highlight search terms
 set incsearch						" show search matches as you type
-set nofoldenable					" I do not like that folding stuff
+"set nofoldenable					" I do not like that folding stuff
 set formatoptions+=1				" when wrapping paragraphs, don't end lines
 									"    with 1-letter words (looks stupid)
 
@@ -74,6 +70,14 @@ let snips_email="Github@TonKersten.com"
 let snips_github="http://github.com/tonk"
 let snips_organisation="Smart Owl Consulting"
 
+" Python checks
+let g:syntastic_python_checkers = ['python3-pylint']
+let g:syntastic_python_flake8_exec = 'python3-flake8'
+"let g:syntastic_python_flake8_args = ['-m', 'flake8']
+
+" Remove all whitespace at the end of the lines
+map <silent> <F10> :%s/\v\s+$//<bar>:let @/=\"\"<CR>
+
 " Plugins
 nnoremap <F5> :NERDTree<CR>
 
@@ -88,7 +92,7 @@ set statusline+=%f\ 							" filename (basename)
 set statusline+=%h%m%r%w						" status flags
 set statusline+=\[%{strlen(&ft)+2?&ft:'none'}]	" file type
 if v:version >= 700
-	set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
+	" set statusline+=\ Spell:%-10{strpart('OffOn',&spell*3,3).'\ ('.&spelllang.')'}	" Spell
 	let g:airline_section_y = 'Spell:%-10{strpart("OffOn",&spell*3,3)."\ (".&spelllang.")"}'
 endif
 set statusline+=%=								" right align remainder
@@ -173,6 +177,40 @@ if has("gui_running")
 	set guioptions-=R
 endif
 
+" Vim-airline
+let g:airline_theme = 'powerlineish'
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#branch#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
+
+let g:airline_symbols = {}
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+
+" Powerline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+"
+" Special settings for ATroff files
+augroup atroff
+	autocmd!
+
+	autocmd BufEnter *.n set nopaste
+	autocmd BufEnter *.n set sr
+	autocmd BufEnter *.n set textwidth=68
+	autocmd BufEnter *.n set wrapmargin=0
+	autocmd BufEnter *.n set list
+	autocmd BufEnter *.n set spell
+	autocmd BufEnter *.n set spelllang=en
+	autocmd BufEnter *.n set filetype=atroff
+	"autocmd BufEnter *.n set formatoptions=croqtam
+augroup END
+
 " Special settings for LaTeX files
 augroup tex
 	autocmd!
@@ -237,16 +275,25 @@ augroup END
 augroup puppet
 	autocmd!
 	" Define a retab command for Puppet manifest files
-	autocmd BufEnter *.pp set noexpandtab
+	autocmd BufEnter *.pp set expandtab
 	autocmd BufEnter *.pp set ai
-	autocmd BufEnter *.pp set ts=4
-	autocmd BufEnter *.pp set sw=4
+	autocmd BufEnter *.pp set ts=2
+	autocmd BufEnter *.pp set sw=2
 	autocmd BufEnter *.pp map <silent> f :Tabular block<CR>
-	autocmd BufEnter *.pp map <silent> t :% !unexpand --tabs=4 --first-only<CR>
+	autocmd BufEnter *.pp map <silent> t :% !expand --tabs=2 -i<CR>
 augroup END
 
-" Use the Vim Airline. Do use the PowerLine fonts with Airline
-let g:airline_powerline_fonts = 1
+" no one is really happy until you have this shortcuts
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
 
 " Some things handy for syntax highlighting
 let myfiletypefile = "~/.vim/filetype.vim"
