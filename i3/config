@@ -57,9 +57,10 @@ floating_modifier $mod
 bindsym $mod+Return  exec gnome-terminal --hide-menubar --command ~/.i3/tm
 bindsym $ctrl+$alt+t exec gnome-terminal
 
-# Start KeepassX and Pass
+# Start Password managers
 bindsym $ctrl+$mod+k exec /usr/bin/keepassx
 bindsym $ctrl+$mod+p exec ~/.i3/passmenu2
+bindsym $ctrl+$mod+e exec /opt/Enpass/bin/runenpass.sh
 
 # Start the PCMan File Manager
 bindsym $ctrl+$mod+f exec /usr/bin/pcmanfm
@@ -70,7 +71,7 @@ bindsym $alt+F4 kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run -f -i -sf '#1c1c1c' -sb '#ff8800' -nf '#f7f7f7' -nb '#007c4c' -fn 'Source Code Pro-14'
-bindsym $mod+m exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -sf '#1c1c1c' -sb '#ff8800' -nf '#f7f7f7' -nb '#007c4c' -fn 'Source Code Pro-14'"
+bindsym $mod+m exec --no-startup-id i3-dmenu-desktop --entry-type=name --dmenu="dmenu -i -sf '#1c1c1c' -sb '#ff8800' -nf '#f7f7f7' -nb '#007c4c' -fn 'Source Code Pro-14'"
 
 # change focus
 bindsym $mod+j         focus left
@@ -247,9 +248,9 @@ bindsym XF86TouchpadToggle    exec ~/.i3/bin/togglekeypad
 #bindsym XF86Explorer
 
 # extra keyboard bindings
-bindsym Print             exec "sleep 0.2; /usr/bin/scrot -s '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
-bindsym $shift+Print      exec "sleep 0.2; /usr/bin/scrot    '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
-bindsym $mod+$shift+Print exec "sleep 0.2; /usr/bin/scrot -m '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
+bindsym Print             exec "sleep 0.2; /usr/bin/scrot -s    '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
+bindsym $shift+Print      exec "sleep 0.2; /usr/bin/scrot -b -u '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
+bindsym $mod+$shift+Print exec "sleep 0.2; /usr/bin/scrot       '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
 
 # lock screen
 bindsym $ctrl+$mod+l    exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"
@@ -374,6 +375,7 @@ for_window [class="hipchat4"]					floating enable, border normal
 for_window [class="Slack"]					floating enable, border normal
 for_window [class="Keepassx" window_type="Dialog"] focus;	floating enable, border normal
 for_window [class="Keepassx"]					floating enable, border normal
+for_window [class="Enpass"]					floating enable, border normal
 for_window [class="PasswordSafe"]				floating enable, border normal
 for_window [class="remote-viewer"]				floating enable, border normal
 for_window [class="GitKraken"]					floating enable, border normal
