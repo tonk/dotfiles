@@ -1,13 +1,45 @@
-#!/bin/sh
-xrandr					\
+#!/bin/bash
+# vi: set sw=4 ts=4 ai:
+
+IAM="${0##*/}"
+
+case ${IAM} in
+	beamer)		x="1024"; y="768"	;;
+	beamerhd)	x="1920"; y="1080"	;;
+	*)
+		echo "Call as: beamer[hd]"
+		exit 1
+		;;
+esac
+
+xrandr							\
 	--output HDMI-1 --off		\
 	--output HDMI-2 --off		\
-	--output VIRTUAL-1 --off	\
-	--output DP-1			\
-		--mode 1920x1080	\
-		--pos 0x0		\
-		--rotate normal		\
-	--output eDP-1			\
-		--mode 1366x768		\
-		--pos 1920x0		\
-		--rotate normal
+	--output DP-1				\
+		--mode ${x}x${y}		\
+		--pos 0x0				\
+		--noprimary				\
+		--rotate normal			\
+	--output eDP-1				\
+		--mode 1366x768			\
+		--pos ${x}x0			\
+		--rotate normal			\
+		--primary
+xrandr --output eDP-1 --primary
+
+# Switch of powersaving and screensaver
+ps -fu ${USER}							| \
+	awk '/[x]autolock/ { print $2 }'	| \
+	xargs kill
+xset -dpms
+xset s off
+
+# Set the keyboard
+setxkbmap -option caps:hyper
+xmodmap ~/.i3/xmodmap
+
+# And display the background
+cmd=$(grep '/usr/bin/feh' ~/.i3/config | sed 's/exec --no-startup-id //')
+eval ${cmd}
+
+i3-msg restart

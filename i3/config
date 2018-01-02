@@ -44,7 +44,7 @@ set $primary HDMI-2
 ## set $primary DP2-2
 
 # Define $primary as the primary display
-exec --no-startup-id /usr/bin/xrandr --output $primary --primary
+## exec --no-startup-id /usr/bin/xrandr --output $primary --primary
 
 # Set font
 #font pango:DejaVu Sans Mono 10
@@ -122,7 +122,7 @@ bindsym $mod+e layout toggle split
 bindsym $mod+t sticky toggle
 
 # toggle tiling / floating
-bindsym $mod+$shift+space floating toggle
+bindsym $mod+$ctrl+space floating toggle
 
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
@@ -253,8 +253,8 @@ bindsym $shift+Print      exec "sleep 0.2; /usr/bin/scrot -b -u '/home/tonk/Pict
 bindsym $mod+$shift+Print exec "sleep 0.2; /usr/bin/scrot       '/home/tonk/Pictures/%Y-%m-%d_%H-%M-%s.png'"
 
 # lock screen
-bindsym $ctrl+$mod+l    exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"
-bindsym Pause           exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"
+bindsym $ctrl+$mod+l    exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/wallpaper2.png -I 10 --color="#010101"
+bindsym Pause           exec /usr/bin/i3lock -beft -i ~/.i3/Pictures/wallpaper2.png -I 10 --color="#010101"
 bindsym $ctrl+$alt+$del exec ~/.i3/blocks/shutdown_menu -c
 
 # reload the configuration file
@@ -264,7 +264,7 @@ bindsym $mod+$shift+c reload
 bindsym $mod+$shift+r restart
 
 # Make the currently focused window a scratchpad
-bindsym $mod+$shift+minus move scratchpad
+bindsym $mod+$ctrl+minus move scratchpad
 # Show the first scratchpad window
 bindsym $mod+minus scratchpad show
 
@@ -385,6 +385,7 @@ for_window [class="SIDN-DESKTOP"]				floating enable, border normal
 for_window [class="SIDN-DESKTOP "]				floating enable, border normal
 for_window [class="MPlayer"]					floating enable
 for_window [instance="gimp"]					floating enable
+for_window [instance="pdfpres"]					floating enable
 
 # start applications (Start with dimming the volumes)
 exec --no-startup-id /usr/bin/amixer -c $acard sset Master '15%' on
@@ -393,7 +394,7 @@ exec --no-startup-id /usr/bin/amixer -c $acard sset Capture '15%' off
 ## exec --no-startup-id ~/.i3/bin/ponymix -c $acard --source set-volume 0
 #
 exec --no-startup-id /usr/bin/nm-applet
-exec --no-startup-id /usr/bin/xautolock -time 5 -locker '/usr/bin/i3lock -beft -i ~/.i3/Pictures/dark.png -I 10 --color="#010101"'
+exec --no-startup-id /usr/bin/xautolock -time 5 -locker '/usr/bin/i3lock -beft -i ~/.i3/Pictures/wallpaper2.png -I 10 --color="#010101"'
 exec --no-startup-id /usr/bin/dunst -config ~/.i3/dunstrc
 exec --no-startup-id /usr/bin/xsetroot -solid "#010101"
 exec --no-startup-id /usr/bin/xset -b

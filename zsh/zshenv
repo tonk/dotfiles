@@ -1,13 +1,4 @@
-#------------------------------------------------------------------------------#
-# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
-#------------------------------------------------------------------------------#
-
-#------------------------------------------------------------------------------#
-# $Id:: zshenv 10 2009-08-09 15:21:03Z tonk                                 $: #
-# $Revision:: 10                                                            $: #
-# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2009-08-09 17:23:10 +0200 (Sun, 09 Aug 2009)                      $: #
-#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:
 
 # No files from the system
 unsetopt globalrcs
@@ -18,8 +9,8 @@ source ~/.zsh/zalias
 source ~/.zsh/zfunction
 source ~/.zsh/zexport
 source ~/.zsh/zprofile
-source ~/.zsh/zprompt
+# source ~/.zsh/zprompt
 
 [[	(${TERM_PROFILE} != "cursus" )	&&	\
 	( ${-} = *i*                 )	&&	\
-	( -x ~/roken                 ) ]] && ~/roken
+	( -e ~/README                ) ]] && cat ~/README

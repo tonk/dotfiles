@@ -1,20 +1,11 @@
-#------------------------------------------------------------------------------#
-# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
-#------------------------------------------------------------------------------#
-
-#------------------------------------------------------------------------------#
-# $Id:: zkeys 2 2011-02-06 13:07:16 tonk                                    $: #
-# $Revision:: 2                                                             $: #
-# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2011-05-26 11:01:40 +0200 (Thu, 26 May 2011)                      $: #
-#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc)
 
 # Needed modules
 autoload -U history-search-end
 autoload -U edit-command-line
 
 # General
-bindkey '\e[Z' undo										# shift-tab            #
+bindkey '\e[Z' undo										# shift-tab
 bindkey '^r' history-incremental-search-backward
 bindkey -M vicmd "^R" redo
 bindkey -M vicmd "u" undo

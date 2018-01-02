@@ -1,16 +1,10 @@
-#------------------------------------------------------------------------------#
-# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
-#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:
 
-#------------------------------------------------------------------------------#
-# $Id:: zexport 35 2011-05-27 10:24:51 tonk                                 $: #
-# $Revision:: 35                                                            $: #
-# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2011-05-27 10:25:02 +0200 (Fri, 27 May 2011)                      $: #
-#------------------------------------------------------------------------------#
+# Build the training(s) for Smart Owl Consulting by default
+export COMP="smartowl"
 
 export LANG=${LANG:-C}
-export LC_ALL=${LC_ALL:-C}
+#export LC_ALL=${LC_ALL:-C}
 export LC_TIME=en_DK.utf8
 
 export EDITOR="${VI}"
@@ -19,37 +13,38 @@ export GIT_EDITOR="${EDITOR}"
 export GIT_PAGER="/usr/bin/less"
 export TIMEFMT="%U user %S system %E elapsed %PCPU (%J)"
 
+# The terminal
+## if [[ ( ${-} = *i* ) && (($TERM == screen*) || ($TERM == xterm*)) ]]
+## then
+## 	export TERM=xterm-256color
+## fi
+
+
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 pathmunge ~/.mutt/bin
 pathmunge ~/bin/we-blog
 pathmunge ~/bin/fpc/bin
-pathmunge /usr/local/texlive/2013/bin/x86_64-linux
-pathmunge /usr/local/texlive/2013/bin/i386-linux
-pathmunge /usr/local/texlive/2013/bin/universal-darwin
+pathmunge /opt/anaconda3/bin
+pathmunge /usr/local/texlive/2017/bin/x86_64-linux
+pathmunge /usr/local/texlive/2017/bin/i386-linux
+pathmunge /usr/local/texlive/2017/bin/universal-darwin
 pathmunge /usr/local/bind/bin
 pathmunge /usr/local/bind/sbin
 pathmunge /opt/local/sbin
 pathmunge /opt/local/bin
 pathmunge ~/bin
-pathmunge ~/bin/git
 pathmunge ~/go/bin
 
 export PATH		# Needed for ZSH on Mac OS X
 
-#-----------------------------------------------------------------------------#
-# Mail settings                                                               #
-#-----------------------------------------------------------------------------#
+# Mail settings
 export MAILPATH="/var/mail/tonk?You have new mail"
 export MAILCHECK=10
 
-#-----------------------------------------------------------------------------#
-# Man settings                                                                #
-#-----------------------------------------------------------------------------#
+# Man settings
 manpathmunge /usr/local/share/man
 
-#-----------------------------------------------------------------------------#
-# History settings                                                            #
-#-----------------------------------------------------------------------------#
+# History settings
 export REPORTTIME=30
 export SAVEHIST=100000
 export HISTSIZE=100000
@@ -61,25 +56,17 @@ else
 	export HISTFILE=~/.zsh/zhistory
 fi
 
-#-----------------------------------------------------------------------------#
-# Pagers (less is more ;-))                                                   #
-#-----------------------------------------------------------------------------#
+# Pagers (less is more ;-))
 export PAGER=/usr/bin/less
 
-#-----------------------------------------------------------------------------#
-# switches for less                                                           #
-#-----------------------------------------------------------------------------#
+# switches for less
 export LESS='-eMFgXmqeisz-2XR -x4 -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
 #export LESS='-mqeisz-2XR -x4'
 
-#------------------------------------------------------------------------------#
-# Watch settings                                                               #
-#------------------------------------------------------------------------------#
+# Watch settings
 export LOGCHECK=5
 export WATCHFMT="%(a:At %T %B%n%b has %a from %M.:At %T %B%n%b on %l has %a.)"
 watch=( notme )
 
-#------------------------------------------------------------------------------#
-# go settings                                                                  #
-#------------------------------------------------------------------------------#
+# go settings
 export GOROOT=${HOME}/go

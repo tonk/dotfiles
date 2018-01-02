@@ -1,0 +1,19 @@
+# If it runs, do not run again
+if ! ps -fu ${USER} | grep -q '[g]pg-agent.*--daemon'
+then
+	# Start the agent
+	gpg-agent			\
+		--quiet			\
+		--daemon		\
+		--enable-ssh-support 	\
+		> "${HOME}/.gpg-agent-info" 2>/dev/null
+fi
+
+# Create the necessary environment variables
+if [[ -f "${HOME}/.gpg-agent-info" ]]
+then
+	. "${HOME}/.gpg-agent-info"
+	export GPG_AGENT_INFO
+	export SSH_AUTH_SOCK
+	export SSH_AGENT_PID
+fi

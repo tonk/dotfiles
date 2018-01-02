@@ -1,17 +1,6 @@
-#------------------------------------------------------------------------------#
-# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
-#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:
 
-#------------------------------------------------------------------------------#
-# $Id:: z_host_specific 17 2012-12-14 08:59:18 tonk                         $: #
-# $Revision:: 17                                                            $: #
-# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2012-12-14 08:59:33 +0100 (Fri, 14 Dec 2012)                      $: #
-#------------------------------------------------------------------------------#
-
-#------------------------------------------------------------------------------#
-# The terminal settings and the terminal (Switch to plain screen if no 256    #
-#------------------------------------------------------------------------------#
+# The terminal settings and the terminal (Switch to plain screen if no 256
 if [[ ${TERM} == screen* ]]
 then
 	T="${TERM}"
@@ -19,7 +8,7 @@ then
 				-e "/usr/share/terminfo/s/${T}"				|| \
 				-e "/opt/local/share/terminfo/73/${TERM}" ) ]]
 	then
-		export TERM=screen
+		export TERM=screen-256color
 	fi
 fi
 

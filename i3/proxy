@@ -1,0 +1,65 @@
+#!/bin/bash
+
+if [[ $(id -u) -ne 0 ]]
+then
+	echo "Run it as root" >&2
+	exit 2
+fi
+
+case "${1}" in
+	off)	echo > /etc/environment
+		rm -f /etc/apt/apt.conf.d/90-proxy
+
+		gsettings set org.gnome.system.proxy mode "none"
+		gsettings set org.gnome.system.proxy.http host ""
+		gsettings set org.gnome.system.proxy.http port 0
+		gsettings set org.gnome.system.proxy.https host ""
+		gsettings set org.gnome.system.proxy.https port 0
+		gsettings set org.gnome.system.proxy.ftp host ""
+		gsettings set org.gnome.system.proxy.ftp port 0
+
+		exit 0
+		;;
+	rivm)
+		host="http://proxy.svc.cal-net.nl"
+		port="3128"
+		no_proxy="localhost,127.0.0.1,::1,localhost.localdomain,192.168.122.0/24,192.168.100.0/24,example.net"
+		;;
+	*)
+		echo "${0} <proxy|off>" >&2
+		exit 1
+		;;
+esac
+
+cat <<- @EOF > /etc/environment
+	#
+	# Proxy for "${1}"
+	#
+	http_proxy="${host}:${port}"
+	https_proxy="${host}:${port}"
+	ftp_proxy="${host}:${port}"
+	no_proxy="${no_proxy}"
+	HTTP_PROXY="${host}:${port}"
+	HTTPS_PROXY="${host}:${port}"
+	FTP_PROXY="${host}:${port}"
+	NO_PROXY="${no_proxy}"
+@EOF
+
+cat <<- @EOF > /etc/apt/apt.conf.d/90-proxy
+	#
+	# Proxy settings for "${1}"
+	#
+	Acquire::http::proxy "${host}:${port}";
+	Acquire::ftp::proxy "${host}:${port}";
+	Acquire::https::proxy "${host}:${port}";
+@EOF
+
+gsettings set org.gnome.system.proxy.http host "${host}"
+gsettings set org.gnome.system.proxy.http port "${port}"
+gsettings set org.gnome.system.proxy.https host "${host}"
+gsettings set org.gnome.system.proxy.https port "${port}"
+gsettings set org.gnome.system.proxy.ftp host "${host}"
+gsettings set org.gnome.system.proxy.ftp port "${port}"
+gsettings set org.gnome.system.proxy mode "manual"
+
+i3-msg restart

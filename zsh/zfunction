@@ -1,13 +1,4 @@
-#------------------------------------------------------------------------------#
-# vi: set sw=4 ts=4 ai:                            ("set modeline" in ~/.exrc) #
-#------------------------------------------------------------------------------#
-
-#------------------------------------------------------------------------------#
-# $Id:: zfunction 18 2012-07-24 08:32:17 tonk                               $: #
-# $Revision:: 18                                                            $: #
-# $Author:: Ton Kersten <Github@TonKersten.com>                             $: #
-# $Date:: 2012-07-24 08:32:58 +0200 (Tue, 24 Jul 2012)                      $: #
-#------------------------------------------------------------------------------#
+# vi: set sw=4 ts=4 ai:
 
 set -U path
 set -U manpath
@@ -150,6 +141,13 @@ precmd()
 	# First rehash the commands
 	rehash
 
+	# load prompt functions
+	setopt promptsubst
+	setopt transient_rprompt
+
+	# get the colors
+	source ~/.zsh/zcolors
+
 	# Now check if there's new mail
 	if [[ -d ${HOME}/Maildir/new ]]
 	then
@@ -169,10 +167,31 @@ precmd()
 		fi
 	fi
 
+	# Set the TMUX title if in a tmux session
 	if [[ ( ${-} = *i* ) && ( $TERM == screen* ) ]]
 	then
 		printf "\ek$(hostname -s)\e\\"
 	fi
+
+	# Remote?
+	REM=""
+	[[ x"${SSH_TTY:-}" != x"" ]] && REM="->"
+
+	JOBS=""
+	[[ ${#jobstates} != 0 ]] && JOBS="[${#jobstates}] "
+
+	# reset the colors when printing the rside prompt always
+	if [[ x"${TERM_PROFILE}" == x"cursus" ]]
+	then
+		PS1=$'$C_BLUE%n@%m $C_RED%2~$ $C_OFF'
+	else
+		PS1=$'${JOBS}$C_RED${ZSSH}$C_CYAN${REM}%n@%m$(prompt_git_info) $C_WHITE%2~$ $C_OFF'
+	fi
+	[[ $(${ID} -u) = 0 ]] && PS1=$'${JOBS}$C_RED${ZSSH}$C_RED${REM}%n@%m $C_WHITE%2~# $C_OFF'
+
+	RPSR=$' $C_OFF'
+	RPSL=$'$C_OFF$C_L_RED%(0?.$C_L_GREEN.(%?%)) '
+	RPS2='%^'
 }
 
 
@@ -233,7 +252,7 @@ prompt_git_info()
 		esac
 		if [[ "$__CURRENT_GIT_BRANCH_IS_DIRTY" = "1" ]]
 		then
-			s+="⚡"
+			s+=""
 		fi
 		s+=")"
 
